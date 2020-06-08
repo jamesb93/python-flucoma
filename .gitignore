@@ -1,3 +1,5 @@
 /flucoma/__pycache__
 .DS_Store
 /python_flucoma.egg-info
+dist
+build
