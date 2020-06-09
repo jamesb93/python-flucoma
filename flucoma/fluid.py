@@ -9,6 +9,7 @@ import shutil
 if not shutil.which("fluid-noveltyslice"):
 	raise BinError("FluCoMa cli tools are not installed!")
 
+# Slicing
 def noveltyslice(
 	source:str,
 	indices:str = "",
@@ -47,7 +48,6 @@ def noveltyslice(
 	])
 
 	handle_ret(ret)
-
 
 	assert os.path.exists(indices)
 	return indices
@@ -91,10 +91,328 @@ def transientslice(
 	])
 
 	handle_ret(ret)
-
 	assert os.path.exists(indices)
 	return indices
 
+def ampslice(
+	source:str,
+	indices:str = "",
+	fastrampdown:int = 1,
+	fastrampup:int = 1,
+	slowrampdown:int = 100,
+	slowrampup:int = 100,
+	floor:float = 144.0,
+	highpassfreq:float = 85.0,
+	offthreshold:float = -144.0,
+	onthreshold:float = 144.0,
+	minslicelength:int = 2,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if indices == "": indices = make_temp()
+
+	ret = subprocess.call([
+		"fluid-ampslice",
+		"-source", str(source),
+		"-indices", str(indices),
+		"-fastrampdown", str(fastrampdown),
+		"-fastrampup", str(fastrampup),
+		"-slowrampdown", str(slowrampdown),
+		"-slowrampup", str(slowrampup),
+		"-floor", str(floor),
+		"-highpassfreq", str(highpassfreq),
+		"-offthreshold", str(offthreshold),
+		"-onthreshold", str(onthreshold),
+		"-minslicelength", str(minslicelength),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(indices)
+	return indices
+
+def ampgate(
+	source:str,
+	indices:str = "",
+	rampup:int = 10,
+	rampdown:int = 10,
+	highpassfreq:float = 85.0,
+	lookahead:int = 0,
+	lookback:int = 0,
+	minlengthabove:int = 1,
+	minlengthbelow:int = 1,
+	minsilencelength:int = 1,
+	minslicelength:int = 1,
+	offthreshold:float = -144.0,
+	onthreshold:float = 144.0,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if indices == "": indices = make_temp()
+
+	ret = subprocess.call([
+		"fluid-ampgate",
+		"-source", str(source),
+		"-indices", str(indices),
+		"-rampup", str(rampup),
+		"-rampdown", str(rampdown),
+		"-highpassfreq", str(highpassfreq),
+		"-lookahead", str(lookahead),
+		"-lookback", str(lookback),
+		"-minlengthabove", str(minlengthabove),
+		"-minlengthbelow", str(minlengthbelow),
+		"-minsilencelength", str(minsilencelength),
+		"-minslicelength", str(minslicelength),
+		"-offthreshold", str(offthreshold),
+		"-onthreshold", str(onthreshold),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(indices)
+	return indices
+
+def onsetslice(
+	source:str,
+	indices:str = "",
+	fftsettings:List[int] = [1024, -1, -1],
+	filtersize:int = 5,
+	framedelta:int = 0,
+	metric:int = 0,
+	minslicelength:int = 2,
+	threshold:float = 0.5,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if stats == "": stats = make_temp()
+
+	fftsize = fftformat(fftsettings)
+	filtersize = odd_snap(filtersize)
+
+	ret = subprocess.call([
+		"fluid-onsetslice",
+		"-maxfftsize", fftsize,
+		"-source", str(source),
+		"-indices", str(indices),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-filtersize", str(filtersize),
+		"-framedelta", str(framedelta),
+		"-metric", str(metric),
+		"-minslicelength", str(minslicelength),
+		"-threshold", str(threshold),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(indices)
+	return stats
+
+# Layers
+def sines(
+	source:str,
+	sines:str = "",
+	residual:str = "",
+	bandwidth:int = 76,
+	birthhighthreshold:float = -60.0,
+	birthlowthreshold:float = -24,
+	detectionthreshold:float = -96,
+	fftsettings:List[int] = [1024, -1, -1],
+	mintracklen:int = 15,
+	trackfreqrange:float = 50.0,
+	trackingmethod:int = 0,
+	trackmagrange:float = 15,
+	trackprob:float = 0.5,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if sines == "": sines = make_temp()
+	if residual == "": residual = make_temp()
+	fftsize = fftformat(fftsettings)
+
+	ret = subprocess.call([
+		"fluid-sines",
+		"-maxfftsize", fftsize,
+		"-source", str(source),
+		"-sines", str(sines),
+		"-residual", str(residual),
+		"-bandiwdth", str(bandwidth),
+		"-birthhighthreshold", str(birthhighthreshold),
+		"-birthlowthreshold", str(birthlowthreshold),
+		"-detectionthreshold", str(detectionthreshold),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-mintracklen", str(mintracklen),
+		"-trackfreqrange", str(trackfreqrange),
+		"-trackingmethod", str(trackingmethod),
+		"-trackmagrange", str(trackmagrange),
+		"-trackprob", str(trackprob),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(sines)
+	assert os.path.exists(residual)
+	return sines, residual
+
+def transients(
+	source:str,
+	transients:str = "",
+	residual:str = "",
+	blocksize:int = 256,
+	clumplength:int = 25,
+	order:int = 20,
+	padsize:int = 128,
+	skew:float = 0.0,
+	threshback:float = 1.1,
+	threshfwd:float = 2.0,
+	windowsize:int = 14,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if transients == "": transients = make_temp()
+	if residual == "": residual = make_temp()
+
+	ret = subprocess.call([
+		"fluid-transients",
+		"-source", str(source),
+		"-transients", str(transients),
+		"-residual", str(residual),
+		"-blocksize", str(blocksize),
+		"-clumplength", str(clumplength),
+		"-order", str(order),
+		"-padsize", str(padsize),
+		"-skew", str(skew),
+		"-threshback", str(threshback),
+		"-threshfwd", str(threshfwd),
+		"-windowsize", str(windowsize),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(transients)
+	assert os.path.exists(residual)
+	return transients, residual
+
+def hpss(
+	source:str,
+	harmonic:str = "",
+	percussive:str = "",
+	residual:str = "",
+	fftsettings:List[int] = [1024, -1, -1],
+	harmfiltersize:int = 17,
+	percfiltersize:int = 31,
+	harmthresh:List[float] = [0.0, 1.0, 1.0, 1.0],
+	percthresh:List[float] = [0.0, 1.0, 1.0, 1.0],
+	maskingmode:int = 0,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if harmonic == "": harmonic = make_temp()
+	if percussive == "": percussive = make_temp()
+	if residual == "": residual = make_temp()
+
+	fftsize = fftformat(fftsettings)
+
+	harmfiltersize = odd_snap(harmfiltersize)
+	percfiltersize = odd_snap(percfiltersize)
+
+	ret = subprocess.call([
+		"fluid-hpss",
+		"-source", str(source),
+		"-harmonic", str(harmonic),
+		"-percussive", str(percussive),
+		"-residual", str(residual),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-harmfiltersize", str(harmfiltersize),
+		"-percfiltersize", str(percfiltersize),
+		"-harmthresh", str(harmthresh[0]), str(harmthresh[1]), str(harmthresh[2]), str(harmthresh[3]),
+		"-percthresh", str(percthresh[0]), str(percthresh[1]), str(percthresh[2]), str(percthresh[3]),
+		"-maskingmode", str(maskingmode),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(harmonic)
+	assert os.path.exists(percussive)
+	if maskingmode != 0: assert os.path.exists(residual)
+	if maskingmode == 0: return harmonic, percussive
+	else: return harmonic, percussive, residual
+
+# Objects
+def nmf(
+	source:str,
+	activations:str = "",
+	bases:str = "",
+	resynth:str = "",
+	actmode:int = 0,
+	basesmode:int = 0,
+	components:int = 0,
+	fftsettings:List[int] = [1024, -1, -1],
+	iterations:int = 100,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if activations == "": activations = make_temp()
+	if bases == "": bases  = make_temp()
+	if resynth == "": resynth  = make_temp()
+
+	fftsize = fftformat(fftsettings)
+
+	ret = subprocess.call([
+		"fluid-nmf",
+		"-source", str(source),
+		"-activations", str(activations),
+		"-bases", str(bases),
+		"-resynth", str(resynth),
+		"-actmode", str(actmode),
+		"-basesmode", str(basesmode),
+		"-components", str(components),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-iterations", str(iterations),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(resynth)
+	assert os.path.exists(activations)
+	assert os.path.exists(bases)
+	return resynth, activations, bases
+
+# Descriptors
 def mfcc(
 	source:str,
 	features:str = "",
@@ -129,7 +447,6 @@ def mfcc(
 	])
 
 	handle_ret(ret)
-
 	assert os.path.exists(features)
 	return features
 
@@ -162,10 +479,5 @@ def stats(
 	])
 
 	handle_ret(ret)
-
 	assert os.path.exists(stats)
 	return stats
-
-
-
-
