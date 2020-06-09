@@ -20,7 +20,7 @@ idx = get_slices(ns, "numpy")
 print(idx)
 ```
 
-Can be installed by:
+Can be installed by any of the methods:
 
 1. Cloning this repo, `cd` and call `pip install .`
 2. `pip install https://github.com/jamesb93/python-flucoma`
