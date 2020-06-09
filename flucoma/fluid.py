@@ -30,7 +30,7 @@ def noveltyslice(
 
 	subprocess.call([
 		"fluid-noveltyslice",
-		"-maxkernelsize", kernelsize,
+		"-maxkernelsize", str(kernelsize),
 		"-maxfftsize", str(fftsize),
 		"-maxfiltersize", str(filtersize),
 		"-source", str(source),
