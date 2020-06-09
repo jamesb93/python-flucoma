@@ -2,7 +2,7 @@ import soundfile as sf
 import math
 from typing import List
 
-def get_slices(audio_file_path: str, output: str = "list"):
+def get_buffer(audio_file_path: str, output: str = "list"):
     """Returns an audio files fp32 values as a numpy array"""
     data, _ = sf.read(audio_file_path)
     data = data.transpose()
