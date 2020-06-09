@@ -1,6 +1,10 @@
 import soundfile as sf
 import math
+import tempfile
+import os
+from uuid import uuid4
 from typing import List
+from .exceptions import ShellError
 
 def get_buffer(audio_file_path: str, output: str = "list"):
     """Returns an audio files fp32 values as a numpy array"""
