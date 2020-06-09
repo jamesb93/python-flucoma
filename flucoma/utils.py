@@ -23,6 +23,11 @@ def fftformat(fftsettings: List[int]) -> int:
     if  fftsize == -1:
         fftsize = fftsettings[0]
     return math.floor(2 ** math.ceil(math.log(fftsize)/math.log(2)))
+def make_temp() -> str:
+    """Convenience for creating unique temporary files"""
+    tmp = tempfile.mkdtemp()
+    uuid = str(uuid4().hex)
+    return os.path.join(tmp, f"{uuid}.wav")
 def handle_ret(retval: int):
     """Handle return value and raise exceptions if necessary"""
     if retval != 0:
