@@ -1,9 +1,7 @@
 from typing import List
 from uuid import uuid4
-from .utils import odd_snap, fftformat
 from .utils import odd_snap, fftformat, make_temp, handle_ret
 from .exceptions import BinError
-import tempfile
 import os
 import subprocess
 import shutil
