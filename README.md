@@ -9,15 +9,37 @@ A basic novelty slice call is something like:
 
 ```python
 from flucoma import fluid
-from flucoma.utils import get_slices, odd_snap
+from flucoma.utils import get_slices
 from pathlib import Path
 
 source = Path("~/Desktop/ec1.wav").expanduser().resolve()
 
 ns = fluid.noveltyslice(source, threshold=0.1)
-idx = get_slices(ns, "numpy")
+idx = get_buffer(ns)
 
 print(idx)
+```
+
+or for a more complex example chaining together the output of one process as the input of the next.
+
+```python
+from flucoma import fluid
+from flucoma.utils import get_slices
+
+
+mfcc = fluid.mfcc(source, 
+    fftsettings = [2048, -1, -1],
+    startframe = start,
+    numframes = length
+)
+
+stats = get_buffer(
+    fluid.stats(mfcc,
+        numderivs = 1
+    ), "numpy" # get_buffer() can return numpy arrays too
+)
+
+print(stats)
 ```
 
 Can be installed by any of the methods:
