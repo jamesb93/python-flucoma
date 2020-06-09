@@ -17,17 +17,18 @@ def noveltyslice(
 	filtersize:int = 1,
 	fftsettings:List[int] = [1024, -1, 1024],
 	kernelsize:int = 3,
-	minslicelength:int = 2) -> str:
+	minslicelength:int = 2,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
 
-	if indices == "":
-		tmp = tempfile.mkdtemp()
-		uuid = str(uuid4().hex)
-		indices = os.path.join(tmp, f"{uuid}.wav")
+	if indices == "": indices = make_temp()
 	
 	kernelsize = odd_snap(kernelsize)
 	fftsize = fftformat(fftsettings)
 
-	subprocess.call([
+	ret = subprocess.call([
 		"fluid-noveltyslice",
 		"-maxkernelsize", str(kernelsize),
 		"-maxfftsize", str(fftsize),
@@ -38,7 +39,7 @@ def noveltyslice(
 		"-threshold", str(threshold),
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
 		"-minslicelength", str(minslicelength),
-		"-filtersize", str(filtersize)
+		"-filtersize", str(filtersize),
 		"-numchans", str(numchans),
 		"-numframes", str(numframes),
 		"-startchan", str(startchan),
@@ -164,6 +165,7 @@ def stats(
 
 	assert os.path.exists(stats)
 	return stats
+
 
 
 
