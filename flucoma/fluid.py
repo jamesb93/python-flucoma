@@ -45,6 +45,48 @@ def noveltyslice(
 	assert os.path.exists(indices)
 	return indices
 
+def transientslice(
+	source:str,
+	indices:str = "",
+	blocksize:int = 256,
+	clumplength:int = 25,
+	minslicelength:int = 100,
+	order:int = 20,
+	padsize:int = 128,
+	skew:float = 0.0,
+	threshback:float = 1.1,
+	threshfwd:float = 2.0,
+	windowsize:int = 14,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if indices == "": indices = make_temp()
+
+	ret = subprocess.call([
+		"fluid-transientslice",
+		"-source", str(source),
+		"-indices", str(indices),
+		"-blocksize", str(blocksize),
+		"-clumplength", str(clumplength),
+		"-minslicelength", str(minslicelength),
+		"-order", str(order),
+		"-padsize", str(padsize),
+		"-skew", str(skew),
+		"-threshback", str(threshback),
+		"-threshfwd", str(threshfwd),
+		"-windowsize", str(windowsize),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+
+	assert os.path.exists(indices)
+	return indices
 
 def mfcc(
 	source:str,
