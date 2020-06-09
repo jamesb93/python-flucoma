@@ -46,4 +46,76 @@ def noveltyslice(
 	return indices
 
 
+def mfcc(
+	source:str,
+	features:str = "",
+	fftsettings:List[int] = [1024, -1, -1],
+	maxfreq:float = 20000.0,
+	minfreq:float = 20.0,
+	numbands:int = 40,
+	numcoeffs:int = 13,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if features == "": features = make_temp()
+	fftsize = fftformat(fftsettings)
+
+	ret = subprocess.call([
+		"fluid-mfcc",
+		"-maxnumcoeffs", str(numcoeffs),
+		"-maxfftsize", str(fftsize),
+		"-source", str(source),
+		"-features", str(features),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-maxfreq", str(maxfreq),
+		"-minfreq", str(minfreq),
+		"-numbands", str(numbands),
+		"-numcoeffs", str(numcoeffs),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+
+	assert os.path.exists(features)
+	return features
+
+def stats(
+	source:str,
+	stats:str = "",
+	high:float = 100.0,
+	low:float = 0.0,
+	middle:float = 50.0,
+	numderivs:int = 0,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	if stats == "": stats = make_temp()
+
+	ret = subprocess.call([
+		"fluid-stats",
+		"-source", str(source),
+		"-stats", str(stats),
+		"-high", str(high),
+		"-low", str(low),
+		"-middle", str(middle),
+		"-numderivs", str(numderivs),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+
+	assert os.path.exists(stats)
+	return stats
+
+
 
