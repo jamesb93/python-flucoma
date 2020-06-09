@@ -40,6 +40,10 @@ def noveltyslice(
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
 		"-minslicelength", str(minslicelength),
 		"-filtersize", str(filtersize)
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
 	])
 
 	assert os.path.exists(indices)
