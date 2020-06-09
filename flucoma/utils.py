@@ -19,6 +19,7 @@ def odd_snap(number: int) -> int:
         return number
 
 def fftformat(fftsettings: List[int]) -> int:
+    """Handles the FFT size so you can pass maxfftsize"""
     fftsize = fftsettings[2]
     if  fftsize == -1:
         fftsize = fftsettings[0]
