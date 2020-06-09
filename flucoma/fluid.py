@@ -1,9 +1,14 @@
 from typing import List
 from uuid import uuid4
 from .utils import odd_snap, fftformat
+from .exceptions import BinError
 import tempfile
 import os
 import subprocess
+import shutil
+
+if not shutil.which("fluid-noveltyslice"):
+	raise BinError("FluCoMa cli tools are not installed!")
 
 def noveltyslice(
 	source:str,
