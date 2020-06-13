@@ -2,6 +2,8 @@
 
 Very loose functional programming bindings from Python3 to [FluCoMa](https://www.flucoma.org) CLI tools.
 
+You will need to download the command line versions and put them somewhere in your path.
+
 With these bindings I tried to replicate the buffer based behaviour that is present across their supported CCE's instead of any magic to produce a 'native' feel to the code.
 Instead, functions are bound to `fluid` processes which return where the outputs are. It is then you're job to collect the results.
 
