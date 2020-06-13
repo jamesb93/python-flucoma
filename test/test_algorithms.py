@@ -28,7 +28,6 @@ def test_noveltyslice():
     assert result[0] - 512 <= tolerance
     assert result[0] != -1.0
 
-
 def test_ampslice():
     output = fluid.ampslice(test_file, onthreshold=-24)
     result = get_buffer(output)
