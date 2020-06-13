@@ -10,7 +10,14 @@ from flucoma.utils import (
     odd_snap,
     fftformat,
     make_temp,
+    fftsanitise
 )
+
+def test_fftsanitise():
+    bad_fft = [512.0, 128.0, 512.0]
+    good_fft = fftsanitise(bad_fft)
+    for x in good_fft:
+        assert type(x) == type(int())
 
 def test_get_buffer():
     # make a test wave file with some values
