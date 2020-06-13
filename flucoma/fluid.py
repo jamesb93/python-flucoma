@@ -1,6 +1,12 @@
 from typing import List
 from uuid import uuid4
-from .utils import odd_snap, fftformat, make_temp, handle_ret
+from .utils import (
+	odd_snap, 
+	fftformat, 
+	make_temp, 
+	handle_ret, 
+	fftsanitise
+)
 from .exceptions import BinError
 from .returns import (
 	NMFReturn,
