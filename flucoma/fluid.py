@@ -40,6 +40,7 @@ def noveltyslice(
 	if indices == "": indices = make_temp()
 	
 	kernelsize = odd_snap(kernelsize)
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
 	ret = subprocess.call([
@@ -219,6 +220,7 @@ def onsetslice(
 
 	if stats == "": stats = make_temp()
 
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 	filtersize = odd_snap(filtersize)
 
@@ -267,11 +269,13 @@ def sines(
 
 	if sines == "": sines = make_temp()
 	if residual == "": residual = make_temp()
+
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
 	ret = subprocess.call([
 		"fluid-sines",
-		"-maxfftsize", fftsize,
+		"-maxfftsize", str(fftsize),
 		"-source", str(source),
 		"-sines", str(sines),
 		"-residual", str(residual),
@@ -364,6 +368,7 @@ def hpss(
 	if percussive == "": percussive = make_temp()
 	if residual == "": residual = make_temp()
 
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
 	harmfiltersize = odd_snap(harmfiltersize)
@@ -419,8 +424,8 @@ def nmf(
 	if bases == "": bases  = make_temp()
 	if resynth == "": resynth  = make_temp()
 
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
-
 	ret = subprocess.call([
 		"fluid-nmf",
 		"-source", str(source),
@@ -461,6 +466,8 @@ def mfcc(
 	assert os.path.exists(source)
 
 	if features == "": features = make_temp()
+
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
 	ret = subprocess.call([
@@ -534,6 +541,8 @@ def pitch(
 	assert os.path.exists(source)
 
 	if features == "": features = make_temp()
+
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
 	ret = subprocess.call([
@@ -572,6 +581,8 @@ def melbands(
 	assert os.path.exists(source)
 
 	if features == "": features = make_temp()
+
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
 	ret = subprocess.call([
@@ -607,6 +618,7 @@ def spectralshape(
 	assert os.path.exists(source)
 
 	if features == "": features = make_temp()
+	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
 	ret = subprocess.call([
