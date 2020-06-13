@@ -23,9 +23,8 @@ def test_get_buffer():
     # make a test wave file with some values
     rands = []
     test_file = "random_buffer.wav"
-    for i in range(100):
+    for _ in range(100):
         rands.append(random())
-    rands_np = np.array(rands)
     wavfile.write(test_file, 44100, np.array(rands))
     assert os.path.exists("random_buffer.wav")
     buflist = get_buffer(test_file)
