@@ -110,7 +110,7 @@ def ampslice(
 	fastrampup:int = 1,
 	slowrampdown:int = 100,
 	slowrampup:int = 100,
-	floor:float = 144.0,
+	floor:float = -144.0,
 	highpassfreq:float = 85.0,
 	offthreshold:float = -144.0,
 	onthreshold:float = 144.0,
