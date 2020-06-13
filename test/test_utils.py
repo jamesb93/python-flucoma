@@ -30,7 +30,7 @@ def test_get_buffer():
     assert os.path.exists("random_buffer.wav")
     buflist = get_buffer(test_file)
     bufnp = get_buffer(test_file, "numpy")
-
+    os.remove(test_file)
     assert type(buflist) == type(list())
     assert type(bufnp) == type(np.zeros((1, 1)))
     assert buflist == rands
