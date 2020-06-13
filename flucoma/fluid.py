@@ -478,6 +478,148 @@ def mfcc(
 	assert os.path.exists(features)
 	return features
 
+def loudness(
+	source:str,
+	features:str = "",
+	hopsize:int = 512,
+	windowsize:int = 1024,
+	kweighting:int = 1,
+	truepeak:int = 1,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
+
+	if features == "": features = make_temp()
+
+	ret = subprocess.call([
+		"fluid-loudness",
+		"-source", str(source),
+		"-features", str(features),
+		"-hopsize", str(hopsize),
+		"-windowsize", str(windowsize),
+		"-kweighting", str(kweighting),
+		"-truepeak", str(truepeak),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(features)
+	return features
+
+def pitch(
+	source:str,
+	features:str = "",
+	algorithm:int = 2,
+	fftsettings:List[int] = [1024, -1, -1],
+	maxfreq:float = 10000.0,
+	minfreq:float = 20.0,
+	unit:int = 0,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
+
+	if features == "": features = make_temp()
+	fftsize = fftformat(fftsettings)
+
+	ret = subprocess.call([
+		"fluid-pitch",
+		"-maxfftsize", str(fftsize),
+		"-source", str(source),
+		"-features", str(features),
+		"-algorithm", str(algorithm),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-maxfreq", str(maxfreq),
+		"-minfreq", str(minfreq),
+		"-unit", str(unit),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(features)
+	return features
+
+def melbands(
+	source:str,
+	features:str = "",
+	fftsettings:List[int] = [1024, -1, -1],
+	maxfreq:float = 10000.0,
+	minfreq:float = 20.0,
+	normalize:int = 1,
+	numbands:int = 40,
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
+
+	if features == "": features = make_temp()
+	fftsize = fftformat(fftsettings)
+
+	ret = subprocess.call([
+		"fluid-melbands",
+		"-maxnumbands", str(numbands),
+		'-maxfftsize', str(fftsize),	
+		"-source", str(source),
+		"-features", str(features),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-maxfreq", str(maxfreq),
+		"-minfreq", str(minfreq),
+		"-normalize", str(normalize),
+		"-numbands", str(numbands),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(features)
+	return features
+
+def spectralshape(
+	source:str,
+	features:str = "",
+	fftsettings:List[int] = [1024, -1, -1],
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
+
+	if features == "": features = make_temp()
+	fftsize = fftformat(fftsettings)
+
+	ret = subprocess.call([
+		"fluid-spectralshape",
+		'-maxfftsize', str(fftsize),	
+		"-source", str(source),
+		"-features", str(features),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	])
+
+	handle_ret(ret)
+	assert os.path.exists(features)
+	return features
+
+
 def stats( 
 	source:str,
 	stats:str = "",
