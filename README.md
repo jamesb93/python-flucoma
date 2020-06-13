@@ -48,6 +48,6 @@ Can be installed by any of the methods:
 
 1. Cloning this repo, `cd` and call `pip install .`
 2. `pip install git+https://github.com/jamesb93/python-flucoma`
-3. Soon PyPi
+3. `pip install python-flucoma`
 
 
