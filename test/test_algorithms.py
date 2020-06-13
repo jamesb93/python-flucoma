@@ -12,7 +12,7 @@ def test_transientslice():
     output = fluid.transientslice(test_file)
     result = get_buffer(output)
     os.remove(output)
-    tolerance = 25
+    tolerance = 14
     assert len(result) == 1
     assert result[0] - 512 <= tolerance
     assert result[0] != -1.0
