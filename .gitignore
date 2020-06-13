@@ -3,3 +3,4 @@
 /python_flucoma.egg-info
 dist
 build
+*/__pycache__
