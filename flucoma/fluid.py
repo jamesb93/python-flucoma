@@ -24,6 +24,7 @@ def noveltyslice(
 	startchan:int = 0,
 	startframe:int = 0) -> str:
 
+	assert os.path.exists(source)
 	if indices == "": indices = make_temp()
 	
 	kernelsize = odd_snap(kernelsize)
@@ -69,6 +70,8 @@ def transientslice(
 	startchan:int = 0,
 	startframe:int = 0) -> str:
 
+	assert os.path.exists(source)
+
 	if indices == "": indices = make_temp()
 
 	ret = subprocess.call([
@@ -110,6 +113,8 @@ def ampslice(
 	numframes:int = -1,
 	startchan:int = 0,
 	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
 
 	if indices == "": indices = make_temp()
 
@@ -155,6 +160,8 @@ def ampgate(
 	startchan:int = 0,
 	startframe:int = 0) -> str:
 
+	assert os.path.exists(source)
+
 	if indices == "": indices = make_temp()
 
 	ret = subprocess.call([
@@ -195,6 +202,8 @@ def onsetslice(
 	numframes:int = -1,
 	startchan:int = 0,
 	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
 
 	if stats == "": stats = make_temp()
 
@@ -241,6 +250,8 @@ def sines(
 	numframes:int = -1,
 	startchan:int = 0,
 	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
 
 	if sines == "": sines = make_temp()
 	if residual == "": residual = make_temp()
@@ -290,6 +301,8 @@ def transients(
 	startchan:int = 0,
 	startframe:int = 0) -> str:
 
+	assert os.path.exists(source)
+
 	if transients == "": transients = make_temp()
 	if residual == "": residual = make_temp()
 
@@ -332,6 +345,8 @@ def hpss(
 	numframes:int = -1,
 	startchan:int = 0,
 	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
 
 	if harmonic == "": harmonic = make_temp()
 	if percussive == "": percussive = make_temp()
@@ -383,6 +398,8 @@ def nmf(
 	startchan:int = 0,
 	startframe:int = 0) -> str:
 
+	assert os.path.exists(source)
+
 	if activations == "": activations = make_temp()
 	if bases == "": bases  = make_temp()
 	if resynth == "": resynth  = make_temp()
@@ -426,6 +443,8 @@ def mfcc(
 	startchan:int = 0,
 	startframe:int = 0) -> str:
 
+	assert os.path.exists(source)
+
 	if features == "": features = make_temp()
 	fftsize = fftformat(fftsettings)
 
@@ -461,6 +480,8 @@ def stats(
 	numframes:int = -1,
 	startchan:int = 0,
 	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
 
 	if stats == "": stats = make_temp()
 
