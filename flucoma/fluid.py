@@ -3,10 +3,10 @@ from uuid import uuid4
 from .utils import odd_snap, fftformat, make_temp, handle_ret
 from .exceptions import BinError
 from .returns import (
-	hpss_return,
-	transients_return,
-	nmf_return,
-	sines_return
+	NMFReturn,
+	TransientsReturn,
+	HPSSReturn,
+	SinesReturn
 )
 import os
 import subprocess
@@ -288,7 +288,7 @@ def sines(
 	handle_ret(ret)
 	assert os.path.exists(sines)
 	assert os.path.exists(residual)
-	return sines, residual
+	return SinesReturn(sines, residual)
 
 def transients(
 	source:str,
@@ -305,7 +305,7 @@ def transients(
 	numchans:int = -1,
 	numframes:int = -1,
 	startchan:int = 0,
-	startframe:int = 0) -> str:
+	startframe:int = 0) -> TransientsReturn:
 
 	assert os.path.exists(source)
 
@@ -334,7 +334,7 @@ def transients(
 	handle_ret(ret)
 	assert os.path.exists(transients)
 	assert os.path.exists(residual)
-	return transients, residual
+	return TransientsReturn(transients, residual)
 
 def hpss(
 	source:str,
@@ -350,7 +350,7 @@ def hpss(
 	numchans:int = -1,
 	numframes:int = -1,
 	startchan:int = 0,
-	startframe:int = 0) -> str:
+	startframe:int = 0) -> HPSSReturn:
 
 	assert os.path.exists(source)
 
@@ -384,9 +384,12 @@ def hpss(
 	handle_ret(ret)
 	assert os.path.exists(harmonic)
 	assert os.path.exists(percussive)
-	if maskingmode != 0: assert os.path.exists(residual)
-	if maskingmode == 0: return harmonic, percussive
-	else: return harmonic, percussive, residual
+	if maskingmode != 0: 
+		assert os.path.exists(residual)
+	if maskingmode == 0: 
+		return HPSSReturn(harmonic, percussive)
+	else: 
+		return HPSSReturn(harmonic, percussive, residual)
 
 # Objects
 def nmf(
@@ -402,7 +405,7 @@ def nmf(
 	numchans:int = -1,
 	numframes:int = -1,
 	startchan:int = 0,
-	startframe:int = 0) -> str:
+	startframe:int = 0) -> NMFReturn:
 
 	assert os.path.exists(source)
 
@@ -433,7 +436,7 @@ def nmf(
 	assert os.path.exists(resynth)
 	assert os.path.exists(activations)
 	assert os.path.exists(bases)
-	return nmf_return(resynth, bases, activations)
+	return NMFReturn(resynth, bases, activations)
 
 # Descriptors
 def mfcc(
