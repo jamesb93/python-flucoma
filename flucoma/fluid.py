@@ -279,7 +279,7 @@ def sines(
 		"-source", str(source),
 		"-sines", str(sines),
 		"-residual", str(residual),
-		"-bandiwdth", str(bandwidth),
+		"-bandwidth", str(bandwidth),
 		"-birthhighthreshold", str(birthhighthreshold),
 		"-birthlowthreshold", str(birthlowthreshold),
 		"-detectionthreshold", str(detectionthreshold),
