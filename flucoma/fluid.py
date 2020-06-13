@@ -2,6 +2,12 @@ from typing import List
 from uuid import uuid4
 from .utils import odd_snap, fftformat, make_temp, handle_ret
 from .exceptions import BinError
+from .returns import (
+	hpss_return,
+	transients_return,
+	nmf_return,
+	sines_return
+)
 import os
 import subprocess
 import shutil
@@ -427,7 +433,7 @@ def nmf(
 	assert os.path.exists(resynth)
 	assert os.path.exists(activations)
 	assert os.path.exists(bases)
-	return resynth, activations, bases
+	return nmf_return(resynth, bases, activations)
 
 # Descriptors
 def mfcc(
@@ -469,7 +475,7 @@ def mfcc(
 	assert os.path.exists(features)
 	return features
 
-def stats(
+def stats( 
 	source:str,
 	stats:str = "",
 	high:float = 100.0,
