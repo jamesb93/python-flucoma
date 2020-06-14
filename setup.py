@@ -19,5 +19,6 @@ setuptools.setup(
     install_requires=[
         "SoundFile",
         "numpy",
+        "scipy",
     ],
 )
