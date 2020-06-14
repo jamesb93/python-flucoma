@@ -19,14 +19,15 @@ jobs:
             mkdir -p build && cd build
             cmake ..
             make install
-            ls ../release-packaging/FluidCorpusManipulation/bin
-            echo "::add-path::../release-packaging/FluidCorpusManipulation/bin"
-            sudo apt-get install libsndfile1
+            cd ..
+            echo "::add-path::./release-packaging/FluidCorpusManipulation/bin"
+            
+        - name: Install Libraries
+          run: sudo apt-get install libsndfile1
 
         - name: Setup Python
           run: |
             cd $GITHUB_WORKSPACE
-            PATH=$PATH:$GITHUB_WORKSPACE/flucoma-cli/release-packaging/FluidCorpusManipulation/bin/
             python -m pip install --upgrade pip
             pip install setuptools wheel pytest
             pip install -e .
