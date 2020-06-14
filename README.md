@@ -1,5 +1,7 @@
 # python-flucoma
 
+![run tests automatically each push](https://github.com/jamesb93/python-flucoma/workflows/run%20tests%20automatically%20each%20push/badge.svg?event=push)
+
 Very loose functional programming bindings from Python3 to [FluCoMa](https://www.flucoma.org) CLI tools.
 
 You will need to download the command line versions and put them somewhere in your path.
