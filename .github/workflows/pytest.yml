@@ -19,5 +19,5 @@ jobs:
             pip install Soundfile numpy
 
         - name: test
-        - run: | 
+          run: | 
             pytest
