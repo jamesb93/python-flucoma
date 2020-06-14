@@ -12,7 +12,7 @@ jobs:
           with:
             python-version: '3.x'
 
-        - name: Install
+        - name: Install Dependencies
           run: |
             git clone "https://github.com/flucoma/flucoma-cli.git"
             cd flucoma-cli
@@ -21,11 +21,12 @@ jobs:
             make install
             ls ../release-packaging/FluidCorpusManipulation/bin
             echo "::add-path::../release-packaging/FluidCorpusManipulation/bin"
-            cd $GITHUB_WORKSPACE
+            sudo apt-get install libsndfile1
 
         - name: Setup Python
           run: |
-            sudo apt-get install libsndfile1
+            cd $GITHUB_WORKSPACE
+            PATH=$PATH:$GITHUB_WORKSPACE/flucoma-cli/release-packaging/FluidCorpusManipulation/bin/
             python -m pip install --upgrade pip
             pip install setuptools wheel pytest
             pip install -e .
