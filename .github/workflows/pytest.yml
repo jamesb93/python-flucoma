@@ -22,6 +22,7 @@ jobs:
             ls ../release-packaging/FluidCorpusManipulation/bin
             echo "::add-path::../release-packaging/FluidCorpusManipulation/bin"
             cd $GITHUB_WORKSPACE
+            echo $PATH
             
             sudo apt-get install libsndfile1
             python -m pip install --upgrade pip
