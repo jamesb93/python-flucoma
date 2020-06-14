@@ -16,14 +16,14 @@ jobs:
           id: flucoma-deps
           uses: actions/cache@v2
           with:
-            path: ~/flucomadeps
+            path: flucomadeps
             key: ${{ runner.os }}-flucomadeps
 
         - name: Install Dependencies
           if: steps.flucoma-deps.outputs.cache-hit != 'true'
           run: |
-            mkdir -p ~/flucomadeps
-            cd ~/flucomadeps
+            mkdir -p flucomadeps
+            cd flucomadeps
             git clone "https://github.com/flucoma/flucoma-cli.git"
             cd flucoma-cli
             mkdir -p build && cd build
@@ -33,7 +33,7 @@ jobs:
             
         - name: Configure Python
           run: |
-            cd ~/work/python-flucoma
+            cd ~/work/python-flucoma/python-flucoma
             sudo apt-get install libsndfile1
             python -m pip install --upgrade pip
             pip install setuptools wheel pytest
