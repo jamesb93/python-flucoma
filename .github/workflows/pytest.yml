@@ -19,9 +19,8 @@ jobs:
             mkdir -p build && cd build
             cmake ..
             make install
-            cd ..
-            echo "::add-path::./release-packaging/FluidCorpusManipulation/bin/"
-            cd ..
+            echo "::add-path::../release-packaging/FluidCorpusManipulation/bin"
+            cd ../../
             
         - name: Configure Python
           run: |
