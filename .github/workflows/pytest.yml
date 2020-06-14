@@ -22,6 +22,7 @@ jobs:
         - name: Install Dependencies
           if: steps.flucoma-deps.outputs.cache-hit != 'true'
           run: |
+            mkdir -p ~/flucomadeps
             cd ~/flucomadeps
             git clone "https://github.com/flucoma/flucoma-cli.git"
             cd flucoma-cli
