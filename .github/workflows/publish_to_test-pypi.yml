@@ -14,7 +14,6 @@ jobs:
         - name: Build
           run: >-
             python setup.py sdist build
-
         - name: Publish distribution 📦 to Test PyPI
           uses: pypa/gh-action-pypi-publish@master
           with:
