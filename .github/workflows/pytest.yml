@@ -12,21 +12,19 @@ jobs:
           with:
             python-version: '3.x'
 
-        - name: Install Dependencies
+        - name: Install and Test
           run: |
             git clone "https://github.com/flucoma/flucoma-cli.git"
             cd flucoma-cli
             mkdir -p build && cd build
             cmake ..
             make install
+            ls ../release-packaging/FluidCorpusManipulation/bin
             echo "::add-path::../release-packaging/FluidCorpusManipulation/bin"
-            cd ../../
+            cd $GITHUB_WORKSPACE
             
             sudo apt-get install libsndfile1
             python -m pip install --upgrade pip
             pip install setuptools wheel pytest
             pip install -e .
-
-        - name: test
-          run: | 
             pytest
