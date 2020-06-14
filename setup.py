@@ -10,6 +10,7 @@ setuptools.setup(
     name="python-flucoma",
     version="1.0.1",
     author="James Bradbury",
+    url="https://github.com/jamesb93/python-flucoma",
     author_email="jamesbradbury93@gmail.com",
     description="Loose bindings to the FluCoMa command line",
     long_description = long_description,
