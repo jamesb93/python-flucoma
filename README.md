@@ -48,8 +48,8 @@ print(stats)
 
 Can be installed by any of the methods:
 
-1. Cloning this repo, `cd` and call `pip install .`
+1. `pip install python-flucoma`
 2. `pip install git+https://github.com/jamesb93/python-flucoma`
-3. `pip install python-flucoma`
+3. Cloning this repo, `cd` and call `pip install .`
 
 
