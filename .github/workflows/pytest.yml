@@ -14,10 +14,15 @@ jobs:
 
         - name: Install deps
           run: |
+            git clone "https://github.com/flucoma/flucoma-cli.git"
+            cd flucoma-cli
+            mkdir -p build && cd build
+            cmake ..
+            make install
+            cd ..
+            echo "::add-path::../release-packaging/FluidCorpusManipulation/bin/"
+            
             sudo apt-get install libsndfile1
-            wget "https://github.com/flucoma/flucoma-cli/releases/download/1.0.0-RC1/FluidCorpusManipulation_CLI_Linux_1_0_0-RC1.tar.gz"
-            tar -xvf FluidCorpusManipulation_CLI_Linux_1_0_0-RC1.tar.gz
-            echo "::add-path::./FluidCorpusManipulation/bin/"
             python -m pip install --upgrade pip
             pip install setuptools wheel pytest
             pip install -e .
