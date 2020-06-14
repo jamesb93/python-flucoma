@@ -8,7 +8,7 @@ with open(readme, encoding="utf-8") as f:
 
 setuptools.setup(
     name="python-flucoma",
-    version="1.0.0",
+    version="1.0.1",
     author="James Bradbury",
     author_email="jamesbradbury93@gmail.com",
     description="Loose bindings to the FluCoMa command line",
