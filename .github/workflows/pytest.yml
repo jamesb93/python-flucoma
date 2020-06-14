@@ -22,8 +22,6 @@ jobs:
             echo "::add-path::../release-packaging/FluidCorpusManipulation/bin"
             cd ../../
             
-        - name: Configure Python
-          run: |
             sudo apt-get install libsndfile1
             python -m pip install --upgrade pip
             pip install setuptools wheel pytest
