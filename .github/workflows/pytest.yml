@@ -6,22 +6,33 @@ jobs:
         name: Use pytest to run tests each push
         runs-on: ubuntu-latest
         steps:
-        - uses: actions/checkout@v1
+        - uses: actions/checkout@v2
         - name: Set up Python
           uses: actions/setup-python@v1
           with:
             python-version: '3.x'
 
-        - name: Install deps
+        - name: Cache dependencies
+          id: flucoma-deps
+          uses: actions/cache@v2
+          with:
+            path: ~/flucomadeps
+            key: ${{ runner.os }}-flucomadeps
+
+        - name: Install Dependencies
+          if: steps.flucoma-deps.outputs.cache-hit != 'true'
           run: |
+            cd ~/flucomadeps
             git clone "https://github.com/flucoma/flucoma-cli.git"
             cd flucoma-cli
             mkdir -p build && cd build
             cmake ..
             make install
-            cd ..
             echo "::add-path::../release-packaging/FluidCorpusManipulation/bin/"
             
+        - name: Configure Python
+          run: |
+            cd ~/work/python-flucoma
             sudo apt-get install libsndfile1
             python -m pip install --upgrade pip
             pip install setuptools wheel pytest
