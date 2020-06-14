@@ -20,7 +20,7 @@ jobs:
             cmake ..
             make install
             cd ..
-            echo "::add-path::./release-packaging/FluidCorpusManipulation/bin"
+            echo "::add-path::$GITHUB_WORKSPACE/flucoma-cli/release-packaging/FluidCorpusManipulation/bin"
             
         - name: Install Libraries
           run: sudo apt-get install libsndfile1
