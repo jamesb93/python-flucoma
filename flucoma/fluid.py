@@ -147,8 +147,7 @@ def ampslice(
 		"-numchans", str(numchans),
 		"-numframes", str(numframes),
 		"-startchan", str(startchan),
-		"-startframe", str(startframe)
-	])
+		"-startframe", str(startframe)])
 
 	handle_ret(ret)
 	assert os.path.exists(indices)
