@@ -13,6 +13,7 @@ setuptools.setup(
     url="https://github.com/jamesb93/python-flucoma",
     author_email="jamesbradbury93@gmail.com",
     description="Loose bindings to the FluCoMa command line",
+    license="BSD",
     long_description = long_description,
     long_description_content_type = "text/markdown",
     packages=["flucoma"],
