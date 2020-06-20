@@ -57,5 +57,4 @@ def cleanup():
     tempfiles = Path(".flucoma")
     if tempfiles.exists():
         rmtree(tempfiles)
-
     
