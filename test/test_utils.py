@@ -67,7 +67,3 @@ def test_cleanup():
     cleanup()
     temp_path = Path(".flucoma")
     assert not temp_path.exists()
-
-
-
-
