@@ -46,3 +46,12 @@ def handle_ret(retval: int):
     """Handle return value and raise exceptions if necessary"""
     if retval != 0:
         raise ShellError(retval)
+def make_temp() -> str:
+    """Create temporary files in local hidden directory"""
+    tempfiles = Path(".flucoma")
+    if not tempfiles.exists():
+        tempfiles.mkdir()
+    
+    uuid = str(uuid4().hex)
+    full_path = tempfiles / f"{uuid}.wav" 
+    return str(full_path)
