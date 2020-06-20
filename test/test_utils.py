@@ -63,6 +63,10 @@ def test_make_temp():
     assert type(another_file) == type(str())
     assert another_file != temp_file
 
+def test_cleanup():
+    cleanup()
+    temp_path = Path(".flucoma")
+    assert not temp_path.exists()
 
 
 
