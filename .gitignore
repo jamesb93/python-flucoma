@@ -6,3 +6,6 @@ build
 */__pycache__
 .vscode
 .mypy_cache
+examples/resynth.wav
+examples/activations.wav
+examples/bases.wav
