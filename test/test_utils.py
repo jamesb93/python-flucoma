@@ -3,14 +3,14 @@ import numpy as np
 import os
 from random import random
 from scipy.io import wavfile
-
-
+from pathlib import Path
 from flucoma.utils import (
     get_buffer,
     odd_snap,
     fftformat,
     make_temp,
-    fftsanitise
+    fftsanitise,
+    cleanup
 )
 
 def test_fftsanitise():
