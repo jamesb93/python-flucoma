@@ -52,3 +52,10 @@ def make_temp() -> str:
     uuid = str(uuid4().hex)
     full_path = tempfiles / f"{uuid}.wav" 
     return str(full_path)
+
+def cleanup():
+    tempfiles = Path(".flucoma")
+    if tempfiles.exists():
+        rmtree(tempfiles)
+
+    
