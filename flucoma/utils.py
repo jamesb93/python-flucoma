@@ -32,7 +32,7 @@ def odd_snap(number: int) -> int:
 def fftformat(fftsettings: List[int]) -> int:
     """Handles the FFT size so you can pass maxfftsize"""
     fftsize = fftsettings[2]
-    if  fftsize == -1:
+    if fftsize == -1:
         fftsize = fftsettings[0]
     return math.floor(2 ** math.ceil(math.log(fftsize)/math.log(2)))
 
