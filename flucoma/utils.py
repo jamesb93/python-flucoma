@@ -45,7 +45,7 @@ def handle_ret(retval: int):
 
 def make_temp() -> str:
     """Create temporary files in local hidden directory"""
-    tempfiles = Path("~/.python-flucoma").expanduser().resolve()
+    tempfiles = Path.home() / ".python-flucoma"
     if not tempfiles.exists():
         tempfiles.mkdir()
     
@@ -54,7 +54,7 @@ def make_temp() -> str:
     return str(full_path)
 
 def cleanup():
-    tempfiles = Path("~/.python-flucoma").expanduser().resolve()
+    tempfiles = Path.home() / ".python-flucoma"
     if tempfiles.exists():
         rmtree(tempfiles)
     
