@@ -56,5 +56,6 @@ def make_temp() -> str:
 def cleanup():
     tempfiles = Path.home() / ".python-flucoma"
     if tempfiles.exists():
-        rmtree(tempfiles)
+        for x in tempfiles.iterdir():
+            x.unlink()
     

@@ -12,6 +12,7 @@ from flucoma.utils import (
     fftsanitise,
     cleanup
 )
+from flucoma import fluid
 
 def test_fftsanitise():
     bad_fft = [512.0, 128.0, 512.0]
@@ -64,6 +65,9 @@ def test_make_temp():
     assert another_file != temp_file
 
 def test_cleanup():
+    tempfiles = Path.home() / ".python-flucoma"
+    test_file = Path("test") / "test_file.wav"
+    fluid.hpss(test_file)
     cleanup()
-    temp_path = Path.home() / ".python-flucoma"
-    assert not temp_path.exists()
+    leftovers = [x for x in tempfiles.iterdir() if x != ".DS_Store"]
+    assert len(leftovers) == 0
