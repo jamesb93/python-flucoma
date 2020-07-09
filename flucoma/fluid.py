@@ -217,7 +217,7 @@ def onsetslice(
 
 	assert os.path.exists(source)
 
-	if stats == "": stats = make_temp()
+	if indices == "": indices = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -242,7 +242,7 @@ def onsetslice(
 
 	handle_ret(ret)
 	assert os.path.exists(indices)
-	return stats
+	return indices
 
 # Layers
 def sines(
