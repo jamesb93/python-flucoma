@@ -65,5 +65,5 @@ def test_make_temp():
 
 def test_cleanup():
     cleanup()
-    temp_path = Path(".flucoma")
+    temp_path = Path.home() / ".python-flucoma"
     assert not temp_path.exists()
