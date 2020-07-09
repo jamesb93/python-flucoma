@@ -225,7 +225,7 @@ def onsetslice(
 
 	ret = subprocess.call([
 		"fluid-onsetslice",
-		"-maxfftsize", fftsize,
+		"-maxfftsize", str(fftsize),
 		"-source", str(source),
 		"-indices", str(indices),
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
