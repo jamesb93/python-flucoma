@@ -4,6 +4,7 @@ import os
 from random import random
 from scipy.io import wavfile
 from pathlib import Path
+from flucoma import fluid
 from flucoma.utils import (
     get_buffer,
     odd_snap,
@@ -12,7 +13,6 @@ from flucoma.utils import (
     fftsanitise,
     cleanup
 )
-from flucoma import fluid
 
 def test_fftsanitise():
     bad_fft = [512.0, 128.0, 512.0]
