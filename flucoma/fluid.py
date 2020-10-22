@@ -28,7 +28,7 @@ def noveltyslice(
 	feature:int = 0,
 	threshold:float = 0.5,
 	filtersize:int = 1,
-	fftsettings:List[int] = [1024, -1, 1024],
+	fftsettings:List[int] = [1024, -1, -1],
 	kernelsize:int = 3,
 	minslicelength:int = 2,
 	numchans:int = -1,
@@ -42,7 +42,6 @@ def noveltyslice(
 	kernelsize = odd_snap(kernelsize)
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
-
 	ret = subprocess.call([
 		"fluid-noveltyslice",
 		"-maxkernelsize", str(kernelsize),
@@ -52,6 +51,7 @@ def noveltyslice(
 		"-indices", str(indices),
 		"-feature", str(feature),
 		"-threshold", str(threshold),
+		"-kernelsize", str(kernelsize),
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
 		"-minslicelength", str(minslicelength),
 		"-filtersize", str(filtersize),
