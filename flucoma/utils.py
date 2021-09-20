@@ -1,12 +1,9 @@
 import soundfile as sf
 import math
-import tempfile
-import os
 from uuid import uuid4
 from typing import List
 from .exceptions import ShellError
 from pathlib import Path
-from shutil import rmtree
 
 def fftsanitise(fftsettings) -> List[int]:
     return [
