@@ -6,9 +6,9 @@ source = Path("Nicol-LoopE-M.wav")
 
 # Run HPSS on the source and return a named tuple.
 # The named tuple will contain an element (a path to a binary file) for each of the components it produces
-hpss = fluid.hpss(source) # return just the tuple
-harm, perc = fluid.hpss(source) # return enumerated elements of the tuple
-
+# hpss = fluid.hpss(source) # return just the tuple
+hpss = fluid.hpss(source) # return enumerated elements of the tuple
+quit()
 # You can then reference each component in several ways
 
 # By name
