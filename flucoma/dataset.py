@@ -1,6 +1,6 @@
 from .exceptions import DatasetPointError
 
-def pack(d: dict):
+def from_dict(d: dict):
     """
     Reformats a dictionary into a fluid.dataset~
     Two things need to be true for this to work
