@@ -18,7 +18,6 @@ setuptools.setup(
     long_description_content_type = "text/markdown",
     packages=["flucoma"],
     install_requires=[
-        "SoundFile",
         "numpy",
         "scipy",
     ],
