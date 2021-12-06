@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from uuid import uuid4
 from .utils import (
 	odd_snap, 
@@ -11,9 +11,11 @@ from .exceptions import BinError
 from .returns import (
 	NMFReturn,
 	TransientsReturn,
-	HPSSReturn,
-	SinesReturn
+	HPSSReturn, HPSSResidualReturn,
+	SinesReturn,
+	STFTReturn, InverseSTFTReturn
 )
+from pathlib import Path
 import os
 import subprocess
 import shutil
@@ -21,10 +23,101 @@ import shutil
 if not shutil.which("fluid-noveltyslice"):
 	raise BinError("FluCoMa cli tools are not installed!")
 
+def stft(
+	source:str,
+	magnitude:str = None,
+	phase:str = None,
+	resynth:str = None,
+	inverse:bool = False,
+	padding:int = 1,
+	fftsettings:List[int] = [1024, -1, -1],
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> Union[STFTReturn, InverseSTFTReturn]:
+
+	assert os.path.exists(source)
+	if inverse:
+		if not resynth: resynth = make_temp()
+	else:
+		if not phase: phase = make_temp()
+		if not magnitude: magnitude = make_temp()
+
+	fftsettings = fftsanitise(fftsettings)
+	fftsize = fftformat(fftsettings)
+	cmd = [
+		"fluid-stft",
+		"-source", str(source),
+		"-magnitude", str(magnitude),
+		"-phase", str(phase),
+		"-padding", str(padding),
+		"-inverse", str(int(inverse)),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)
+	]
+
+	if inverse:
+		for text in ["-resynth", str(resynth)]:
+			cmd.append(text)
+		
+	ret = subprocess.call(cmd)
+	handle_ret(ret)
+	assert os.path.exists(magnitude)
+	assert os.path.exists(phase)
+	
+	if inverse:
+		assert os.path.exists(resynth)
+		return InverseSTFTReturn(resynth)
+	return STFTReturn(magnitude, phase)
+
+def chroma(
+	source:str,
+	features:str = None,
+	numchroma:int = 12,
+	padding:int = 1,
+	ref:float = 440.0,
+	normalise:bool = False,
+	minfreq:float = 0.0,
+	maxfreq:float = -1.0,
+	fftsettings:List[int] = [1024, -1, -1],
+	numchans:int = -1,
+	numframes:int = -1,
+	startchan:int = 0,
+	startframe:int = 0) -> str:
+
+	assert os.path.exists(source)
+	if not features: features = make_temp()
+
+	fftsettings = fftsanitise(fftsettings)
+	fftsize = fftformat(fftsettings)
+
+	ret = subprocess.call([
+		"fluid-chroma",
+		"-maxnumchroma", str(numchroma),
+		"-maxfftsize", str(fftsize),
+		"-source", str(source),
+		"-features", str(features),
+		"-numchroma", str(numchroma),
+		"-padding", str(padding),
+		"-ref", str(ref),
+		"-normalize", str(int(normalise)),
+		"-minfreq", str(minfreq),
+		"-maxfreq", str(maxfreq),
+		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
+		"-numchans", str(numchans),
+		"-numframes", str(numframes),
+		"-startchan", str(startchan),
+		"-startframe", str(startframe)])
+
+	handle_ret(ret)
+	assert os.path.exists(features)
+	return features
+
 # Slicing
 def noveltyslice(
 	source:str,
-	indices:str = "",
+	indices:str = None,
 	feature:int = 0,
 	threshold:float = 0.5,
 	filtersize:int = 1,
@@ -37,7 +130,7 @@ def noveltyslice(
 	startframe:int = 0) -> str:
 
 	assert os.path.exists(source)
-	if indices == "": indices = make_temp()
+	if not indices: indices = make_temp()
 	
 	kernelsize = odd_snap(kernelsize)
 	fftsettings = fftsanitise(fftsettings)
@@ -62,13 +155,12 @@ def noveltyslice(
 	])
 
 	handle_ret(ret)
-
 	assert os.path.exists(indices)
 	return indices
 
 def transientslice(
 	source:str,
-	indices:str = "",
+	indices:str = None,
 	blocksize:int = 256,
 	clumplength:int = 25,
 	minslicelength:int = 100,
@@ -85,7 +177,7 @@ def transientslice(
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	if not indices: indices = make_temp()
 
 	ret = subprocess.call([
 		"fluid-transientslice",
@@ -112,7 +204,7 @@ def transientslice(
 
 def ampslice(
 	source:str,
-	indices:str = "",
+	indices:str = None,
 	fastrampdown:int = 1,
 	fastrampup:int = 1,
 	slowrampdown:int = 100,
@@ -129,7 +221,7 @@ def ampslice(
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	if not indices: indices = make_temp()
 
 	ret = subprocess.call([
 		"fluid-ampslice",
@@ -155,7 +247,7 @@ def ampslice(
 
 def ampgate(
 	source:str,
-	indices:str = "",
+	indices:str = None,
 	rampup:int = 10,
 	rampdown:int = 10,
 	highpassfreq:float = 85.0,
@@ -174,7 +266,7 @@ def ampgate(
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	if not indices: indices = make_temp()
 
 	ret = subprocess.call([
 		"fluid-ampgate",
@@ -203,7 +295,7 @@ def ampgate(
 
 def onsetslice(
 	source:str,
-	indices:str = "",
+	indices:str = None,
 	fftsettings:List[int] = [1024, -1, -1],
 	filtersize:int = 5,
 	framedelta:int = 0,
@@ -217,7 +309,7 @@ def onsetslice(
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	if not indices: indices = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -247,8 +339,8 @@ def onsetslice(
 # Layers
 def sines(
 	source:str,
-	sines:str = "",
-	residual:str = "",
+	sines:str = None,
+	residual:str = None,
 	bandwidth:int = 76,
 	birthhighthreshold:float = -60.0,
 	birthlowthreshold:float = -24,
@@ -266,8 +358,8 @@ def sines(
 
 	assert os.path.exists(source)
 
-	if sines == "": sines = make_temp()
-	if residual == "": residual = make_temp()
+	if not sines: sines = make_temp()
+	if not residual: residual = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -301,8 +393,8 @@ def sines(
 
 def transients(
 	source:str,
-	transients:str = "",
-	residual:str = "",
+	transients:str = None,
+	residual:str = None,
 	blocksize:int = 256,
 	clumplength:int = 25,
 	order:int = 20,
@@ -318,8 +410,8 @@ def transients(
 
 	assert os.path.exists(source)
 
-	if transients == "": transients = make_temp()
-	if residual == "": residual = make_temp()
+	if not transients: transients = make_temp()
+	if not residual: residual = make_temp()
 
 	ret = subprocess.call([
 		"fluid-transients",
@@ -347,9 +439,9 @@ def transients(
 
 def hpss(
 	source:str,
-	harmonic:str = "",
-	percussive:str = "",
-	residual:str = "",
+	harmonic:str = None,
+	percussive:str = None,
+	residual:str = None,
 	fftsettings:List[int] = [1024, -1, -1],
 	harmfiltersize:int = 17,
 	percfiltersize:int = 31,
@@ -363,9 +455,9 @@ def hpss(
 
 	assert os.path.exists(source)
 
-	if harmonic == "": harmonic = make_temp()
-	if percussive == "": percussive = make_temp()
-	if residual == "": residual = make_temp()
+	if not harmonic: harmonic = make_temp()
+	if not percussive: percussive = make_temp()
+	if not residual: residual = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -373,12 +465,11 @@ def hpss(
 	harmfiltersize = odd_snap(harmfiltersize)
 	percfiltersize = odd_snap(percfiltersize)
 
-	ret = subprocess.call([
+	cmd = [
 		"fluid-hpss",
 		"-source", str(source),
 		"-harmonic", str(harmonic),
 		"-percussive", str(percussive),
-		"-residual", str(residual),
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize),
 		"-harmfiltersize", str(harmfiltersize),
 		"-percfiltersize", str(percfiltersize),
@@ -389,24 +480,28 @@ def hpss(
 		"-numframes", str(numframes),
 		"-startchan", str(startchan),
 		"-startframe", str(startframe)
-	])
+	]
+
+	if maskingmode != 0:
+		for text in ["-residual", str(residual)]:
+			cmd.append(text)
+
+	ret = subprocess.call(cmd)
 
 	handle_ret(ret)
 	assert os.path.exists(harmonic)
 	assert os.path.exists(percussive)
 	if maskingmode != 0: 
 		assert os.path.exists(residual)
-	if maskingmode == 0: 
-		return HPSSReturn(harmonic, percussive)
-	else: 
-		return HPSSReturn(harmonic, percussive, residual)
+		return HPSSResidualReturn(harmonic, percussive, residual)
+	return HPSSReturn(harmonic, percussive)
 
 # Objects
 def nmf(
 	source:str,
-	activations:str = "",
-	bases:str = "",
-	resynth:str = "",
+	activations:str = None,
+	bases:str = None,
+	resynth:str = None,
 	actmode:int = 0,
 	basesmode:int = 0,
 	components:int = 0,
@@ -419,9 +514,9 @@ def nmf(
 
 	assert os.path.exists(source)
 
-	if activations == "": activations = make_temp()
-	if bases == "": bases  = make_temp()
-	if resynth == "": resynth  = make_temp()
+	if not activations: activations = make_temp()
+	if not bases: bases  = make_temp()
+	if not resynth: resynth  = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -451,7 +546,7 @@ def nmf(
 # Descriptors
 def mfcc(
 	source:str,
-	features:str = "",
+	features:str = None,
 	fftsettings:List[int] = [1024, -1, -1],
 	maxfreq:float = 20000.0,
 	minfreq:float = 20.0,
@@ -464,7 +559,7 @@ def mfcc(
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	if not features: features = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -492,7 +587,7 @@ def mfcc(
 
 def loudness(
 	source:str,
-	features:str = "",
+	features:str = None,
 	hopsize:int = 512,
 	windowsize:int = 1024,
 	kweighting:int = 1,
@@ -504,7 +599,7 @@ def loudness(
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	if not features: features = make_temp()
 
 	ret = subprocess.call([
 		"fluid-loudness",
@@ -526,7 +621,7 @@ def loudness(
 
 def pitch(
 	source:str,
-	features:str = "",
+	features:str = None,
 	algorithm:int = 2,
 	fftsettings:List[int] = [1024, -1, -1],
 	maxfreq:float = 10000.0,
@@ -539,7 +634,7 @@ def pitch(
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	if not features: features = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -566,7 +661,7 @@ def pitch(
 
 def melbands(
 	source:str,
-	features:str = "",
+	features:str = None,
 	fftsettings:List[int] = [1024, -1, -1],
 	maxfreq:float = 10000.0,
 	minfreq:float = 20.0,
@@ -579,7 +674,7 @@ def melbands(
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	if not features: features = make_temp()
 
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
@@ -607,7 +702,7 @@ def melbands(
 
 def spectralshape(
 	source:str,
-	features:str = "",
+	features:str = None,
 	fftsettings:List[int] = [1024, -1, -1],
 	numchans:int = -1,
 	numframes:int = -1,
@@ -616,7 +711,8 @@ def spectralshape(
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	if not features: features = make_temp()
+	
 	fftsettings = fftsanitise(fftsettings)
 	fftsize = fftformat(fftsettings)
 
@@ -639,7 +735,7 @@ def spectralshape(
 
 def stats( 
 	source:str,
-	stats:str = "",
+	stats:str = None,
 	high:float = 100.0,
 	low:float = 0.0,
 	middle:float = 50.0,
@@ -651,7 +747,7 @@ def stats(
 
 	assert os.path.exists(source)
 
-	if stats == "": stats = make_temp()
+	if not stats: stats = make_temp()
 
 	ret = subprocess.call([
 		"fluid-stats",
