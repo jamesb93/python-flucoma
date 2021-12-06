@@ -1,5 +1,5 @@
-import soundfile as sf
 import math
+from scipy.io.wavfile import read
 from uuid import uuid4
 from typing import List
 from .exceptions import ShellError
@@ -14,7 +14,7 @@ def fftsanitise(fftsettings) -> List[int]:
 
 def get_buffer(audio_file_path: str, output: str = "list"):
     """Returns an audio files fp32 values as a numpy array"""
-    data, _ = sf.read(audio_file_path)
+    _, data = read(audio_file_path)
     data = data.transpose()
     if output == "list":
         return data.tolist()
