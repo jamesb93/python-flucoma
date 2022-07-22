@@ -160,3 +160,14 @@ def test_stats():
         output = fluid.stats(test_file, numderivs=i)
         stats = get_buffer(output)
         assert len(stats) == (i+1) * 7
+
+def test_loudness():
+    output = fluid.loudness(
+        source=test_file,
+        windowsize=256,
+        hopsize=128
+    )
+    loudness = get_buffer(output)
+    assert len(loudness) == 2 # loudness and true peak
+    for x in loudness:
+        assert len(x) == len(test_buf) / 128 + 1

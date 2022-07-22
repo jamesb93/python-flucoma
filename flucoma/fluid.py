@@ -505,7 +505,7 @@ def loudness(
 		"-source", str(source),
 		"-features", str(features),
 		"-hopsize", str(hopsize),
-		"-windowsize", str(windowsize), str(windowsize),
+		"-windowsize", str(windowsize),
 		"-kweighting", str(kweighting),
 		"-truepeak", str(truepeak),
 		"-numchans", str(numchans),
