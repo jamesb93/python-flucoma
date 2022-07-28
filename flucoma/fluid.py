@@ -25,7 +25,7 @@ if not shutil.which("fluid-noveltyslice"):
 def noveltyslice(
 	source:str,
 	indices:str = "",
-	feature:int = 0,
+	algorithm:int = 0,
 	threshold:float = 0.5,
 	filtersize:int = 1,
 	fftsettings:List[int] = [1024, -1, -1],
@@ -46,7 +46,7 @@ def noveltyslice(
 		"fluid-noveltyslice",
 		"-source", str(source),
 		"-indices", str(indices),
-		"-algorithm", str(feature),
+		"-algorithm", str(algorithm),
 		"-threshold", str(threshold),
 		"-kernelsize", str(kernelsize), str(kernelsize),
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize), str(fftsize),
