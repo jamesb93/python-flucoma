@@ -8,7 +8,7 @@ with open(readme, encoding="utf-8") as f:
 
 setuptools.setup(
     name="python-flucoma",
-    version="1.3.1",
+    version="1.3.2",
     author="James Bradbury",
     url="https://github.com/jamesb93/python-flucoma",
     author_email="reacoma@jamesbradbury.net",
