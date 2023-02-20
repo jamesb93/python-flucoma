@@ -11,7 +11,7 @@ setuptools.setup(
     version="1.3.2",
     author="James Bradbury",
     url="https://github.com/jamesb93/python-flucoma",
-    author_email="reacoma@jamesbradbury.net",
+    author_email="hello@jamesbradbury.net",
     description="Loose bindings to the FluCoMa command line",
     license="BSD",
     long_description = long_description,
