@@ -6,63 +6,55 @@ import numpy as np
 import os
 
 test_file = (Path(".") / "test" / "test_file.wav").resolve()
-test_buf = get_buffer(test_file)
+test_buf = get_buffer(test_file, "numpy")
 
 # slicers
 def test_transientslice():
-    output = fluid.transientslice(test_file)
-    result = get_buffer(output)
-    os.remove(output)
+    result = fluid.transientslice(test_file)
+    os.remove(result.file_path)
     tolerance = 14
     assert len(result) == 1
     assert result[0] - 512 <= tolerance
     assert result[0] != -1.0
 
 def test_noveltyslice():
-    output = fluid.noveltyslice(test_file, fftsettings=[128, 64, -1], threshold=0.05)
-    result = get_buffer(output)
-    os.remove(output)
+    result = fluid.noveltyslice(test_file, fftsettings=[128, 64, -1], threshold=0.05)
+    os.remove(result.file_path)
     tolerance = 128 #one hop
     assert len(result) == 1
     assert result[0] - 512 <= tolerance
     assert result[0] != -1.0
 
 def test_ampslice():
-    output = fluid.ampslice(test_file, onthreshold=-24)
-    result = get_buffer(output)
-    os.remove(output)
+    result = fluid.ampslice(test_file, onthreshold=-24)
+    os.remove(result.file_path)
     tolerance = 10
     assert len(result) == 1
     assert result[0] - 818 <= tolerance
     assert result[0] != -1.0
 
 def test_ampgate():
-    output = fluid.ampgate(test_file)
-    result = get_buffer(output)
-    os.remove(output)
+    result = fluid.ampgate(test_file)
+    os.remove(result.file_path)
     assert len(result) == 2
     assert result[0][0] == 511
     assert result[1][0] == 1023
-
-# layers
 
 def test_sines():
     output = fluid.sines(test_file)
     assert Path(output.sines).exists()
     assert Path(output.residual).exists()
 
-    for x in output:
-        buf = get_buffer(x)
-        assert len(buf) == len(test_buf)
+    assert len(output.sines) == len(test_buf)
+    assert len(output.residual) == len(test_buf)
 
 def test_transients():
     output = fluid.transients(test_file)
     assert Path(output.transients).exists()
     assert Path(output.residual).exists()
 
-    for x in output:
-        buf = get_buffer(x)
-        assert len(buf) == len(test_buf)
+    assert len(output.transients) == len(test_buf)
+    assert len(output.residual) == len(test_buf)
 
 def test_hpss_maskingmode2():
     output = fluid.hpss(test_file, maskingmode=2)
@@ -70,28 +62,26 @@ def test_hpss_maskingmode2():
     assert Path(output.percussive).exists()
     assert Path(output.residual).exists()
 
-    for x in output:
-        buf = get_buffer(x)
-        assert len(buf) == len(test_buf)
+    assert len(output.harmonic) == len(test_buf)
+    assert len(output.percussive) == len(test_buf)
+    assert len(output.residual) == len(test_buf)
+
 
 def test_hpss():
     output = fluid.hpss(test_file)
     assert Path(output.harmonic).exists()
     assert Path(output.percussive).exists()
 
-    buf = get_buffer(output.harmonic)
-    assert len(buf) == len(test_buf)
-
-    buf = get_buffer(output.percussive)
-    assert len(buf) == len(test_buf)
+    assert len(output.harmonic) == len(test_buf)
+    assert len(output.percussive) == len(test_buf)
 
 def test_nmf():
     fftsize = 256
     hopsize = fftsize / 2
     output = fluid.nmf(test_file, iterations=1, components=3, fftsettings=[fftsize, hopsize, fftsize])
-    resynth     = get_buffer(output.resynth)
-    activations = get_buffer(output.activations)
-    bases       = get_buffer(output.bases)
+    resynth     = output.resynth
+    activations = output.activations
+    bases       = output.bases
     assert len(resynth) == 3
     assert len(activations) == 3
     assert len(bases) == 3
@@ -110,11 +100,11 @@ def test_mfcc():
     fftsize = 256
     hopsize = fftsize / 2
     numcoeffs = 6
-    output = fluid.mfcc(
+    mfcc = fluid.mfcc(
         test_file, 
         numcoeffs=numcoeffs, 
-        fftsettings=[fftsize, hopsize, fftsize])
-    mfcc = get_buffer(output)
+        fftsettings=[fftsize, hopsize, fftsize]
+    )
     assert len(mfcc) == numcoeffs
     for x in mfcc:
         assert len(x) == len(test_buf) / hopsize + 1
