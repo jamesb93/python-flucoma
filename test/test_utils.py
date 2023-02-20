@@ -11,8 +11,27 @@ from flucoma.utils import (
     fftformat,
     make_temp,
     fftsanitise,
-    cleanup
+    cleanup,
+    parse_version
 )
+
+def test_parse_version():
+    ex1 = "The Fluid Corpus Manipulation Toolkit has version 1.0.5+sha.fab75e7.core.sha.001df55a\n"
+    ex2 = "The Fluid Corpus Manipulation Toolkit has version 1.1.0+sha.fab75e7.core.sha.001df55a\n"
+    ex3 = "The Fluid Corpus Manipulation Toolkit has version 3.0.0+sha.fab75e7.core.sha.001df55a\n"
+    ex4 = "The FluCoMa Toolkit has version 1.0.5+sha.fab75e7.core.sha.001df55a\n"
+    
+    v1 = parse_version(ex1)
+    v2 = parse_version(ex2)
+    v3 = parse_version(ex3)
+    v4 = parse_version(ex4)
+
+    assert v1 == 105
+    assert v2 == 110
+    assert v3 == 300
+    assert v4 == 105
+    assert v2 > v1
+    
 
 def test_fftsanitise():
     bad_fft = [512.0, 128.0, 512.0]
