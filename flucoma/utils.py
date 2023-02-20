@@ -32,7 +32,7 @@ def parse_version(version_string: str):
     return version
 
 
-def fftsanitise(fftsettings) -> List[int]:
+def fft_sanitise(fftsettings) -> List[int]:
     return [
         int(fftsettings[0]),
         int(fftsettings[1]), 
@@ -55,7 +55,7 @@ def odd_snap(number: int) -> int:
     else:
         return number
 
-def fftformat(fftsettings: List[int]) -> int:
+def fft_format(fftsettings: List[int]) -> int:
     """Handles the FFT size so you can pass maxfftsize"""
     fftsize = fftsettings[2]
     if fftsize == -1:
