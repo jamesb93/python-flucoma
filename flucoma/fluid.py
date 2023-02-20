@@ -1,11 +1,14 @@
-from typing import List
+import os
+import subprocess
+import shutil
+from typing import List, Union
 from uuid import uuid4
 from .utils import (
 	odd_snap, 
-	fftformat, 
+	fft_format, 
 	make_temp, 
 	handle_ret, 
-	fftsanitise,
+	fft_sanitise,
 	check_compatible_version
 )
 from .exceptions import BinError
@@ -15,9 +18,10 @@ from .returns import (
 	HPSSReturn,
 	SinesReturn
 )
-import os
-import subprocess
-import shutil
+from .core import (
+	FluidSingleOutput,
+	HPSSOutput
+)
 
 if not shutil.which("fluid-noveltyslice"):
 	raise BinError("FluCoMa cli tools are not installed!")
@@ -38,6 +42,7 @@ def noveltyslice(
 	numframes:int = -1,
 	startchan:int = 0,
 	startframe:int = 0) -> str:
+	startframe:int = 0) -> FluidSingleOutput:
 
 	assert os.path.exists(source)
 	if indices == "": indices = make_temp()
