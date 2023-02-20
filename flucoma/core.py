@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from flucoma.utils import get_buffer
 
 @dataclass
-class FlucomaSingleOutput:
+class FluidSingleOutput:
 	file_path: str
 
 	def __post_init__(self):
@@ -35,33 +35,36 @@ class HPSSOutput:
 	residual_path: str = ''
 
 	def __post_init__(self):
-		self.harmonic = FlucomaSingleOutput(self.harmonic_path)
-		self.percussive = FlucomaSingleOutput(self.percussive_path)
+		self.harmonic = FluidSingleOutput(self.harmonic_path)
+		self.percussive = FluidSingleOutput(self.percussive_path)
 		if self.residual_path != '':
-			self.residual = FlucomaSingleOutput(self.residual_path)
+			self.residual = FluidSingleOutput(self.residual_path)
 
+@dataclass
 class NMFOutput:
 	resynth_path: str = ''
 	bases_path: str = ''
 	activations_path: str = ''
 
 	def __post_init__(self):
-		self.activations = FlucomaSingleOutput(self.activations_path)
-		self.bases = FlucomaSingleOutput(self.bases_path)
-		self.activations = FlucomaSingleOutput(self.activations_path)
+		self.resynth = FluidSingleOutput(self.resynth_path)
+		self.bases = FluidSingleOutput(self.bases_path)
+		self.activations = FluidSingleOutput(self.activations_path)
 
+@dataclass
 class SinesOutput:
 	sines_path: str = ''
 	residual_path: str = ''
 
 	def __post_init__(self):
-		self.sines = FlucomaSingleOutput(self.sines_path)
-		self.residual = FlucomaSingleOutput(self.residual_path)
+		self.sines = FluidSingleOutput(self.sines_path)
+		self.residual = FluidSingleOutput(self.residual_path)
 
+@dataclass
 class TransientsOutput:
 	transients_path: str = ''
 	residual_path: str = ''
 
 	def __post_init__(self):
-		self.transients = FlucomaSingleOutput(self.transients_path)
-		self.residual = FlucomaSingleOutput(self.residual_path)
+		self.transients = FluidSingleOutput(self.transients_path)
+		self.residual = FluidSingleOutput(self.residual_path)
