@@ -1,9 +1,36 @@
 import soundfile as sf
+import re
 import math
+import subprocess
 from uuid import uuid4
 from typing import List
-from .exceptions import ShellError
+from .exceptions import ShellError, BinVersionIncompatible
 from pathlib import Path
+
+def check_compatible_version(minimum_version):
+    # Check version of CLI tools is compatible
+    flucoma_cli_version = subprocess.run(
+        ['fluid-noveltyslice', '--version'], 
+        stdout=subprocess.PIPE
+    ).stdout.decode('utf-8')
+
+    parsed_version = parse_version(flucoma_cli_version)
+
+    if  parsed_version < minimum_version:
+	    raise BinVersionIncompatible(f'FluCoMa CLI tools need to be greater than or equal to 1.0.5. They are currently {parsed_version}')
+
+
+def parse_version(version_string: str):
+    # regular expression to extract the version number, ignoring any text before it and after it
+    pattern = r".*version (\d+\.\d+\.\d+)[^,]*"
+
+    # search for the pattern in the string
+    match = re.search(pattern, version_string)
+
+    # extract the version number from the matched object
+    version = int(match.group(1).replace('.', ''))
+    return version
+
 
 def fftsanitise(fftsettings) -> List[int]:
     return [
