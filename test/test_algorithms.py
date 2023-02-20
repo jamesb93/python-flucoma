@@ -5,8 +5,7 @@ from pathlib import Path
 import numpy as np
 import os
 
-test_file = Path(".") / "test" / "test_file.wav"
-test_file = test_file.resolve()
+test_file = (Path(".") / "test" / "test_file.wav").resolve()
 test_buf = get_buffer(test_file)
 
 # slicers
