@@ -472,7 +472,7 @@ def mfcc(
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize), str(fftsize),
 		"-maxfreq", str(maxfreq),
 		"-minfreq", str(minfreq),
-		"-numbands", str(numbands),
+		"-numbands", str(numbands), str(numbands),
 		"-numcoeffs", str(numcoeffs), str(numcoeffs),
 		"-numchans", str(numchans),
 		"-numframes", str(numframes),
