@@ -5,7 +5,8 @@ from .utils import (
 	fftformat, 
 	make_temp, 
 	handle_ret, 
-	fftsanitise
+	fftsanitise,
+	check_compatible_version
 )
 from .exceptions import BinError
 from .returns import (
@@ -20,6 +21,8 @@ import shutil
 
 if not shutil.which("fluid-noveltyslice"):
 	raise BinError("FluCoMa cli tools are not installed!")
+
+check_compatible_version(105)
 
 # Slicing
 def noveltyslice(
