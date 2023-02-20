@@ -8,9 +8,9 @@ from flucoma import fluid
 from flucoma.utils import (
     get_buffer,
     odd_snap,
-    fftformat,
+    fft_format,
     make_temp,
-    fftsanitise,
+    fft_sanitise,
     cleanup,
     parse_version
 )
@@ -33,9 +33,9 @@ def test_parse_version():
     assert v2 > v1
     
 
-def test_fftsanitise():
+def test_fft_sanitise():
     bad_fft = [512.0, 128.0, 512.0]
-    good_fft = fftsanitise(bad_fft)
+    good_fft = fft_sanitise(bad_fft)
     for x in good_fft:
         assert type(x) == type(int())
 
@@ -64,17 +64,17 @@ def test_odd_snap():
     assert odd_snap(1025) == 1025
 
 
-def test_fftformat():
+def test_fft_format():
     caseone = [1024, 512, -1]
     casetwo = [100, 512, -1]
     casethree = [100, 512, -1]
     casefour = [100, 512, 100]
     casefive = [500, -1, -1]
-    assert fftformat(caseone) == 1024
-    assert fftformat(casetwo) == 128
-    assert fftformat(casethree) == 128
-    assert fftformat(casefour) == 128
-    assert fftformat(casefive) == 512
+    assert fft_format(caseone) == 1024
+    assert fft_format(casetwo) == 128
+    assert fft_format(casethree) == 128
+    assert fft_format(casefour) == 128
+    assert fft_format(casefive) == 512
 
 def test_make_temp():
     temp_file = make_temp()
