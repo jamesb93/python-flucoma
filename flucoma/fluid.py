@@ -280,7 +280,7 @@ def sines(
 		"-fftsettings", str(fftsettings[0]), str(fftsettings[1]), str(fftsize), str(fftsize),
 		"-mintracklen", str(mintracklen),
 		"-trackfreqrange", str(trackfreqrange),
-		"-trackingmethod", str(trackingmethod),
+		"-trackmethod", str(trackingmethod),
 		"-trackmagrange", str(trackmagrange),
 		"-trackprob", str(trackprob),
 		"-numchans", str(numchans),
