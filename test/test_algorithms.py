@@ -1,8 +1,6 @@
 from flucoma import fluid
 from flucoma.utils import get_buffer
-from scipy.io import wavfile
 from pathlib import Path
-import numpy as np
 import os
 
 test_file = (Path(".") / "test" / "test_file.wav").resolve()
