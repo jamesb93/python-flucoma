@@ -9,3 +9,7 @@ class ShellError(Exception):
 class DatasetPointError(Exception):
     def __init__(self, msg:str):
         super().__init__(msg)
+
+class BinVersionIncompatible(Exception):
+    def __init__(self, msg:str):
+        super().__init__(msg)
