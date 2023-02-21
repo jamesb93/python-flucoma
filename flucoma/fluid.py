@@ -2,7 +2,6 @@ import os
 import subprocess
 import shutil
 from typing import List, Union
-from uuid import uuid4
 from .utils import (
 	fft_format, 
 	make_temp, 
@@ -26,24 +25,24 @@ check_compatible_version(105)
 
 # Slicing
 def noveltyslice(
-	source:str,
-	indices:str = "",
-	algorithm:int = 0,
-	threshold:float = 0.5,
-	filtersize:int = 1,
-	fftsettings:List[int] = [1024, -1, -1],
-	kernelsize:int = 3,
-	minslicelength:int = 2,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	indices: str = "",
+	algorithm: int = 0,
+	threshold: float = 0.5,
+	filtersize: int = 1,
+	fftsettings: List[int] = [1024, -1, -1],
+	kernelsize: int = 3,
+	minslicelength: int = 2,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
-	if indices == "": indices = make_temp()
+	indices = indices or make_temp()
 	
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -69,28 +68,28 @@ def noveltyslice(
 	return FluidSingleOutput(indices)
 
 def transientslice(
-	source:str,
-	indices:str = "",
-	blocksize:int = 256,
-	clumplength:int = 25,
-	minslicelength:int = 100,
-	order:int = 20,
-	padsize:int = 128,
-	skew:float = 0.0,
-	threshback:float = 1.1,
-	threshfwd:float = 2.0,
-	windowsize:int = 14,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	indices: str = "",
+	blocksize: int = 256,
+	clumplength: int = 25,
+	minslicelength: int = 100,
+	order: int = 20,
+	padsize: int = 128,
+	skew: float = 0.0,
+	threshback: float = 1.1,
+	threshfwd: float = 2.0,
+	windowsize: int = 14,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	indices = indices or make_temp()
 
 	ret = subprocess.call([
 		"fluid-transientslice",
@@ -116,28 +115,28 @@ def transientslice(
 	return FluidSingleOutput(indices)
 
 def ampslice(
-	source:str,
-	indices:str = "",
-	fastrampdown:int = 1,
-	fastrampup:int = 1,
-	slowrampdown:int = 100,
-	slowrampup:int = 100,
-	floor:float = -144.0,
-	highpassfreq:float = 85.0,
-	offthreshold:float = -144.0,
-	onthreshold:float = 144.0,
-	minslicelength:int = 2,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	indices: str = "",
+	fastrampdown: int = 1,
+	fastrampup: int = 1,
+	slowrampdown: int = 100,
+	slowrampup: int = 100,
+	floor: float = -144.0,
+	highpassfreq: float = 85.0,
+	offthreshold: float = -144.0,
+	onthreshold: float = 144.0,
+	minslicelength: int = 2,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	indices = indices or make_temp()
 
 	ret = subprocess.call([
 		"fluid-ampslice",
@@ -162,30 +161,30 @@ def ampslice(
 	return FluidSingleOutput(indices)
 
 def ampgate(
-	source:str,
-	indices:str = "",
-	rampup:int = 10,
-	rampdown:int = 10,
-	highpassfreq:float = 85.0,
-	lookahead:int = 0,
-	lookback:int = 0,
-	minlengthabove:int = 1,
-	minlengthbelow:int = 1,
-	minsilencelength:int = 1,
-	minslicelength:int = 1,
-	offthreshold:float = -90,
-	onthreshold:float = -90,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	indices: str = "",
+	rampup: int = 10,
+	rampdown: int = 10,
+	highpassfreq: float = 85.0,
+	lookahead: int = 0,
+	lookback: int = 0,
+	minlengthabove: int = 1,
+	minlengthbelow: int = 1,
+	minsilencelength: int = 1,
+	minslicelength: int = 1,
+	offthreshold: float = -90,
+	onthreshold: float = -90,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	indices = indices or make_temp()
 
 	ret = subprocess.call([
 		"fluid-ampgate",
@@ -213,25 +212,25 @@ def ampgate(
 	return FluidSingleOutput(indices)
 
 def onsetslice(
-	source:str,
-	indices:str = "",
-	fftsettings:List[int] = [1024, -1, -1],
-	filtersize:int = 5,
-	framedelta:int = 0,
-	metric:int = 0,
-	minslicelength:int = 2,
-	threshold:float = 0.5,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	indices: str = "",
+	fftsettings: List[int] = [1024, -1, -1],
+	filtersize: int = 5,
+	framedelta: int = 0,
+	metric: int = 0,
+	minslicelength: int = 2,
+	threshold: float = 0.5,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if indices == "": indices = make_temp()
+	indices = indices or make_temp()
 
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -257,31 +256,31 @@ def onsetslice(
 	return FluidSingleOutput(indices)
 
 def sines(
-	source:str,
-	sines:str = "",
-	residual:str = "",
-	bandwidth:int = 76,
-	birthhighthreshold:float = -60.0,
-	birthlowthreshold:float = -24,
-	detectionthreshold:float = -96,
-	fftsettings:List[int] = [1024, -1, -1],
-	mintracklen:int = 15,
-	trackfreqrange:float = 50.0,
-	trackingmethod:int = 0,
-	trackmagrange:float = 15,
-	trackprob:float = 0.5,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> SinesOutput:
+	source: Union[str, FluidSingleOutput],
+	sines: str = "",
+	residual: str = "",
+	bandwidth: int = 76,
+	birthhighthreshold: float = -60.0,
+	birthlowthreshold: float = -24,
+	detectionthreshold: float = -96,
+	fftsettings: List[int] = [1024, -1, -1],
+	mintracklen: int = 15,
+	trackfreqrange: float = 50.0,
+	trackingmethod: int = 0,
+	trackmagrange: float = 15,
+	trackprob: float = 0.5,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> SinesOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if sines == "": sines = make_temp()
-	if residual == "": residual = make_temp()
+	sines = sines or make_temp()
+	residual = residual or make_temp()
 
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -313,29 +312,29 @@ def sines(
 	return SinesOutput(sines, residual)
 
 def transients(
-	source:str,
-	transients:str = "",
-	residual:str = "",
-	blocksize:int = 256,
-	clumplength:int = 25,
-	order:int = 20,
-	padsize:int = 128,
-	skew:float = 0.0,
-	threshback:float = 1.1,
-	threshfwd:float = 2.0,
-	windowsize:int = 14,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> TransientsOutput:
+	source: Union[str, FluidSingleOutput],
+	transients: str = "",
+	residual: str = "",
+	blocksize: int = 256,
+	clumplength: int = 25,
+	order: int = 20,
+	padsize: int = 128,
+	skew: float = 0.0,
+	threshback: float = 1.1,
+	threshfwd: float = 2.0,
+	windowsize: int = 14,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> TransientsOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if transients == "": transients = make_temp()
-	if residual == "": residual = make_temp()
+	transients = transients or make_temp()
+	residual = residual or make_temp()
 
 	ret = subprocess.call([
 		"fluid-transients",
@@ -362,29 +361,29 @@ def transients(
 	return TransientsOutput(transients, residual)
 
 def hpss(
-	source:str,
-	harmonic:str = "",
-	percussive:str = "",
-	residual:str = "",
-	fftsettings:List[int] = [1024, -1, -1],
-	harmfiltersize:int = 17,
-	percfiltersize:int = 31,
-	harmthresh:List[float] = [0.0, 1.0, 1.0, 1.0],
-	percthresh:List[float] = [0.0, 1.0, 1.0, 1.0],
-	maskingmode:int = 0,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> HPSSOutput:
+	source: Union[str, FluidSingleOutput],
+	harmonic: str = "",
+	percussive: str = "",
+	residual: str = "",
+	fftsettings: List[int] = [1024, -1, -1],
+	harmfiltersize: int = 17,
+	percfiltersize: int = 31,
+	harmthresh: List[float] = [0.0, 1.0, 1.0, 1.0],
+	percthresh: List[float] = [0.0, 1.0, 1.0, 1.0],
+	maskingmode: int = 0,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> HPSSOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if harmonic == "": harmonic = make_temp()
-	if percussive == "": percussive = make_temp()
-	if residual == "": residual = make_temp()
+	harmonic = harmonic or make_temp()
+	percussive = percussive or make_temp()
+	residual = residual or make_temp()
 
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -413,35 +412,35 @@ def hpss(
 	if maskingmode != 0: 
 		assert os.path.exists(residual)
 
-	if maskingmode == 0: 
+	if maskingmode == 0:
 		return HPSSOutput(harmonic, percussive)
 	else: 
 		return HPSSOutput(harmonic, percussive, residual)
 
 # Objects
 def nmf(
-	source:str,
-	activations:str = "",
-	bases:str = "",
-	resynth:str = "",
-	actmode:int = 0,
-	basesmode:int = 0,
-	components:int = 0,
-	fftsettings:List[int] = [1024, -1, -1],
-	iterations:int = 100,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> NMFOutput:
+	source: Union[str, FluidSingleOutput],
+	activations: str = "",
+	bases: str = "",
+	resynth: str = "",
+	actmode: int = 0,
+	basesmode: int = 0,
+	components: int = 0,
+	fftsettings: List[int] = [1024, -1, -1],
+	iterations: int = 100,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> NMFOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if activations == "": activations = make_temp()
-	if bases == "": bases  = make_temp()
-	if resynth == "": resynth  = make_temp()
+	resynth = resynth or make_temp()
+	activations = activations or make_temp()
+	bases = bases or make_temp()
 
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -471,24 +470,24 @@ def nmf(
 
 # Descriptors
 def mfcc(
-	source:Union[str, FluidSingleOutput],
-	features:str = "",
-	fftsettings:List[int] = [1024, -1, -1],
-	maxfreq:float = 20000.0,
-	minfreq:float = 20.0,
-	numbands:int = 40,
-	numcoeffs:int = 13,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> str:
+	source: Union[str, FluidSingleOutput],
+	features: str = "",
+	fftsettings: List[int] = [1024, -1, -1],
+	maxfreq: float = 20000.0,
+	minfreq: float = 20.0,
+	numbands: int = 40,
+	numcoeffs: int = 13,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> str:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	features = features or make_temp()
 
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -513,23 +512,23 @@ def mfcc(
 	return FluidSingleOutput(features)
 
 def loudness(
-	source:str,
-	features:str = "",
-	hopsize:int = 512,
-	windowsize:int = 1024,
-	kweighting:int = 1,
-	truepeak:int = 1,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	features: str = "",
+	hopsize: int = 512,
+	windowsize: int = 1024,
+	kweighting: int = 1,
+	truepeak: int = 1,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	features = features or make_temp()
 
 	ret = subprocess.call([
 		"fluid-loudness",
@@ -550,24 +549,24 @@ def loudness(
 	return FluidSingleOutput(features)
 
 def pitch(
-	source:str,
-	features:str = "",
-	algorithm:int = 2,
-	fftsettings:List[int] = [1024, -1, -1],
-	maxfreq:float = 10000.0,
-	minfreq:float = 20.0,
-	unit:int = 0,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	features: str = "",
+	algorithm: int = 2,
+	fftsettings: List[int] = [1024, -1, -1],
+	maxfreq: float = 10000.0,
+	minfreq: float = 20.0,
+	unit: int = 0,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	features = features or make_temp()
 
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -592,24 +591,24 @@ def pitch(
 	return FluidSingleOutput(features)
 
 def melbands(
-	source:str,
-	features:str = "",
-	fftsettings:List[int] = [1024, -1, -1],
-	maxfreq:float = 10000.0,
-	minfreq:float = 20.0,
-	normalize:int = 1,
-	numbands:int = 40,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	features: str = "",
+	fftsettings: List[int] = [1024, -1, -1],
+	maxfreq: float = 10000.0,
+	minfreq: float = 20.0,
+	normalize: int = 1,
+	numbands: int = 40,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	features = features or make_temp()
 
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
@@ -634,20 +633,20 @@ def melbands(
 	return FluidSingleOutput(features)
 
 def spectralshape(
-	source:str,
-	features:str = "",
-	fftsettings:List[int] = [1024, -1, -1],
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	source: Union[str, FluidSingleOutput],
+	features: str = "",
+	fftsettings: List[int] = [1024, -1, -1],
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if features == "": features = make_temp()
+	features = features or make_temp()
 	fftsettings = fft_sanitise(fftsettings)
 	fftsize = fft_format(fftsettings)
 
@@ -669,22 +668,22 @@ def spectralshape(
 
 def stats( 
 	source: Union[str, FluidSingleOutput],
-	stats:str = "",
-	high:float = 100.0,
-	low:float = 0.0,
-	middle:float = 50.0,
-	numderivs:int = 0,
-	numchans:int = -1,
-	numframes:int = -1,
-	startchan:int = 0,
-	startframe:int = 0) -> FluidSingleOutput:
+	stats: str = "",
+	high: float = 100.0,
+	low: float = 0.0,
+	middle: float = 50.0,
+	numderivs: int = 0,
+	numchans: int = -1,
+	numframes: int = -1,
+	startchan: int = 0,
+	startframe: int = 0) -> FluidSingleOutput:
 
 	if isinstance(source, FluidSingleOutput):
 		source = source.file_path
 
 	assert os.path.exists(source)
 
-	if stats == "": stats = make_temp()
+	stats = stats or make_temp()
 
 	ret = subprocess.call([
 		"fluid-stats",

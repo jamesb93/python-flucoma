@@ -17,7 +17,7 @@ def check_compatible_version(minimum_version):
     parsed_version = parse_version(flucoma_cli_version)
 
     if  parsed_version < minimum_version:
-	    raise BinVersionIncompatible(f'FluCoMa CLI tools need to be greater than or equal to 1.0.5. They are currently {parsed_version}')
+        raise BinVersionIncompatible(f'FluCoMa CLI tools need to be greater than or equal to 1.0.5. They are currently {parsed_version}')
 
 
 def parse_version(version_string: str):
@@ -33,11 +33,7 @@ def parse_version(version_string: str):
 
 
 def fft_sanitise(fftsettings) -> List[int]:
-    return [
-        int(fftsettings[0]),
-        int(fftsettings[1]), 
-        int(fftsettings[2])
-    ]
+    return [int(x) for x in fftsettings]
 
 def get_buffer(audio_file_path: str, output: str = "list"):
     """Returns an audio files fp32 values as a numpy array"""
