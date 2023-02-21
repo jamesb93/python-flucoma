@@ -3,7 +3,6 @@ import re
 import math
 import subprocess
 from uuid import uuid4
-from typing import List
 from .exceptions import ShellError, BinVersionIncompatible
 from pathlib import Path
 
@@ -32,7 +31,7 @@ def parse_version(version_string: str):
     return version
 
 
-def fft_sanitise(fftsettings) -> List[int]:
+def fft_sanitise(fftsettings: list[int, int, int]) -> list[int, int, int]:
     return [int(x) for x in fftsettings]
 
 def get_buffer(audio_file_path: str, output: str = "list"):
@@ -51,7 +50,7 @@ def odd_snap(number: int) -> int:
     else:
         return number
 
-def fft_format(fftsettings: List[int]) -> int:
+def fft_format(fftsettings: list[int, int, int]) -> int:
     """Handles the FFT size so you can pass maxfftsize"""
     fftsize = fftsettings[2]
     if fftsize == -1:
