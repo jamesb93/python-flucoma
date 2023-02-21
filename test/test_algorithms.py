@@ -119,7 +119,9 @@ def test_melbands():
     fftsize = 256
     hopsize = fftsize / 2
     numbands = 6
-    output = fluid.melbands(test_file, numbands=numbands, fftsettings=[fftsize, hopsize, fftsize])
+    output = fluid.melbands(
+        test_file, numbands=numbands, fftsettings=[fftsize, hopsize, fftsize]
+    )
     melbands = get_buffer(output)
     assert len(melbands) == numbands
     for x in melbands:
