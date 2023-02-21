@@ -11,15 +11,16 @@ from flucoma.utils import (
     make_temp,
     fft_sanitise,
     cleanup,
-    parse_version
+    parse_version,
 )
+
 
 def test_parse_version():
     ex1 = "The Fluid Corpus Manipulation Toolkit has version 1.0.5+sha.fab75e7.core.sha.001df55a\n"
     ex2 = "The Fluid Corpus Manipulation Toolkit has version 1.1.0+sha.fab75e7.core.sha.001df55a\n"
     ex3 = "The Fluid Corpus Manipulation Toolkit has version 3.0.0+sha.fab75e7.core.sha.001df55a\n"
     ex4 = "The FluCoMa Toolkit has version 1.0.5+sha.fab75e7.core.sha.001df55a\n"
-    
+
     v1 = parse_version(ex1)
     v2 = parse_version(ex2)
     v3 = parse_version(ex3)
@@ -30,13 +31,14 @@ def test_parse_version():
     assert v3 == 300
     assert v4 == 105
     assert v2 > v1
-    
+
 
 def test_fft_sanitise():
     bad_fft = [512.0, 128.0, 512.0]
     good_fft = fft_sanitise(bad_fft)
     for x in good_fft:
         assert isinstance(x, int)
+
 
 def test_get_buffer():
     # make a test wave file with some values
@@ -75,12 +77,14 @@ def test_fft_format():
     assert fft_format(casefour) == 128
     assert fft_format(casefive) == 512
 
+
 def test_make_temp():
     temp_file = make_temp()
     another_file = make_temp()
     assert isinstance(temp_file, str)
     assert isinstance(another_file, str)
     assert another_file != temp_file
+
 
 def test_cleanup():
     tempfiles = Path.home() / ".python-flucoma"

@@ -22,41 +22,42 @@ spectralshape = fluid.spectralshape(test_file)
 stats = fluid.stats(test_file)
 
 all_algorithms = [
-	mfcc,
-	noveltyslice,
-	transientslice,
-	ampslice,
-	ampgate,
-	onsetslice,
-	sines,
-	transients,
-	hpss,
-	nmf,
-	loudness,
-	pitch,
-	melbands,
-	spectralshape,
-	stats
+    mfcc,
+    noveltyslice,
+    transientslice,
+    ampslice,
+    ampgate,
+    onsetslice,
+    sines,
+    transients,
+    hpss,
+    nmf,
+    loudness,
+    pitch,
+    melbands,
+    spectralshape,
+    stats,
 ]
 
 
 def test_list():
-	'''tests that all outputs can be converted to lists'''
-	for algo in all_algorithms:
-		if (isinstance(algo, FluidSingleOutput)):
-			assert isinstance(list(algo), list)
-		else:
-			for output in algo:
-				assert isinstance(list(output), list)
+    """tests that all outputs can be converted to lists"""
+    for algo in all_algorithms:
+        if isinstance(algo, FluidSingleOutput):
+            assert isinstance(list(algo), list)
+        else:
+            for output in algo:
+                assert isinstance(list(output), list)
+
 
 def test_pathlib():
-	for algo in all_algorithms:
-		if (isinstance(algo, FluidSingleOutput)):
-			p = Path(algo)
-			assert isinstance(p, PosixPath)
-			assert str(p) != ''
-		else:
-			for output in algo:
-				p = Path(output)
-				assert isinstance(p, PosixPath)
-				assert str(p) != ''
+    for algo in all_algorithms:
+        if isinstance(algo, FluidSingleOutput):
+            p = Path(algo)
+            assert isinstance(p, PosixPath)
+            assert str(p) != ""
+        else:
+            for output in algo:
+                p = Path(output)
+                assert isinstance(p, PosixPath)
+                assert str(p) != ""
