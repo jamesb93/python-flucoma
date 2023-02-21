@@ -2,8 +2,8 @@ import soundfile as sf
 import re
 import math
 import subprocess
+import flucoma
 from uuid import uuid4
-from .exceptions import ShellError, BinVersionIncompatible
 from pathlib import Path
 
 
@@ -16,7 +16,7 @@ def check_compatible_version(minimum_version):
     parsed_version = parse_version(flucoma_cli_version)
 
     if parsed_version < minimum_version:
-        raise BinVersionIncompatible(
+        raise flucoma.exceptions.BinVersionIncompatible(
             f"FluCoMa CLI tools need to be greater than or equal to 1.0.5. They are currently {parsed_version}"
         )
 
@@ -55,6 +55,13 @@ def odd_snap(number: int) -> int:
         return number
 
 
+def check_source_exists(source: str) -> bool:
+    if isinstance(source, flucoma.core.FluidSingleOutput):
+        assert Path(source.file_path).exists()
+    else:
+        assert Path(source).exists()
+
+
 def fft_format(fftsettings: list[int, int, int]) -> int:
     """Handles the FFT size so you can pass maxfftsize"""
     fftsize = fftsettings[2]
@@ -66,7 +73,7 @@ def fft_format(fftsettings: list[int, int, int]) -> int:
 def handle_ret(retval: int):
     """Handle return value and raise exceptions if necessary"""
     if retval != 0:
-        raise ShellError(retval)
+        raise flucoma.exceptions.ShellError(retval)
 
 
 def make_temp() -> str:
