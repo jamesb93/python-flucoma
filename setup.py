@@ -14,8 +14,8 @@ setuptools.setup(
     author_email="hello@jamesbradbury.net",
     description="Loose bindings to the FluCoMa command line",
     license="BSD",
-    long_description = long_description,
-    long_description_content_type = "text/markdown",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     packages=["flucoma"],
     install_requires=[
         "SoundFile",
