@@ -1,5 +1,6 @@
+import flucoma
 from dataclasses import dataclass
-from flucoma.utils import get_buffer
+from pathlib import Path
 
 
 @dataclass
@@ -7,7 +8,8 @@ class FluidSingleOutput:
     file_path: str
 
     def __post_init__(self):
-        self.data = get_buffer(self.file_path, "numpy")
+        assert Path(self.file_path).exists()
+        self.data = flucoma.utils.get_buffer(self.file_path, "numpy")
 
     def __str__(self):
         return self.file_path
@@ -47,7 +49,9 @@ class HPSSOutput(FluidMultiOutput):
 
     def __post_init__(self):
         self.harmonic = FluidSingleOutput(self.harmonic_path) if self.harmonic_path else None
-        self.percussive = FluidSingleOutput(self.percussive_path) if self.percussive_path else None
+        self.percussive = (
+            FluidSingleOutput(self.percussive_path) if self.percussive_path else None
+        )
         self.residual = FluidSingleOutput(self.residual_path) if self.residual_path else None
         self.outputs = [out for out in [self.harmonic, self.percussive, self.residual] if out]
 
@@ -84,6 +88,8 @@ class TransientsOutput(FluidMultiOutput):
     residual_path: str = ""
 
     def __post_init__(self):
-        self.transients = FluidSingleOutput(self.transients_path) if self.transients_path else None
+        self.transients = (
+            FluidSingleOutput(self.transients_path) if self.transients_path else None
+        )
         self.residual = FluidSingleOutput(self.residual_path) if self.residual_path else None
         self.outputs = [out for out in [self.transients, self.residual] if out]
