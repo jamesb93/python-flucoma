@@ -4,10 +4,11 @@ from pathlib import Path
 import os
 
 test_file = (Path(".") / "test" / "test_file.wav").resolve()
+test_audio = (Path(".") / "test" / "Nicol-LoopE-M.wav").resolve()
+
 test_buf = get_buffer(test_file, "numpy")
 
 
-# slicers
 def test_transientslice():
     result = fluid.transientslice(test_file)
     os.remove(result.file_path)
@@ -104,7 +105,6 @@ def test_nmf():
         assert len(x) == len(test_buf) / hopsize + 1
 
 
-# descriptors
 def test_mfcc():
     fftsize = 256
     hopsize = fftsize / 2
@@ -157,7 +157,13 @@ def test_stats():
 
 def test_loudness():
     output = fluid.loudness(source=test_file, windowsize=256, hopsize=128)
-    loudness = get_buffer(output)
-    assert len(loudness) == 2  # loudness and true peak
-    for x in loudness:
+    assert len(output) == 2  # loudness and true peak
+    for x in output:
         assert len(x) == len(test_buf) / 128 + 1
+
+
+def test_ampfeature():
+    output1 = fluid.ampfeature(source=test_audio)
+    output2 = fluid.ampfeature(source=test_file)
+    assert len(output1) == 453932
+    assert len(output2) == 1024
