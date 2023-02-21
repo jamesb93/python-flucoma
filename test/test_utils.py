@@ -1,4 +1,3 @@
-import pytest
 import numpy as np
 import os
 from random import random
@@ -37,7 +36,7 @@ def test_fft_sanitise():
     bad_fft = [512.0, 128.0, 512.0]
     good_fft = fft_sanitise(bad_fft)
     for x in good_fft:
-        assert type(x) == type(int())
+        assert isinstance(x, int)
 
 def test_get_buffer():
     # make a test wave file with some values
@@ -50,8 +49,8 @@ def test_get_buffer():
     buflist = get_buffer(test_file)
     bufnp = get_buffer(test_file, "numpy")
     os.remove(test_file)
-    assert type(buflist) == type(list())
-    assert type(bufnp) == type(np.zeros((1, 1)))
+    assert isinstance(buflist, list)
+    assert isinstance(bufnp, np.ndarray)
     assert buflist == rands
 
 
@@ -79,8 +78,8 @@ def test_fft_format():
 def test_make_temp():
     temp_file = make_temp()
     another_file = make_temp()
-    assert type(temp_file) == type(str())
-    assert type(another_file) == type(str())
+    assert isinstance(temp_file, str)
+    assert isinstance(another_file, str)
     assert another_file != temp_file
 
 def test_cleanup():
