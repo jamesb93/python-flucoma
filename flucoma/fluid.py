@@ -1,6 +1,6 @@
 import subprocess
 import shutil
-from typing import List, Union
+from typing import Union
 from flucoma.utils import (
     fft_format,
     make_temp,
@@ -30,7 +30,7 @@ def noveltyslice(
     algorithm: int = 0,
     threshold: float = 0.5,
     filtersize: int = 1,
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     kernelsize: int = 3,
     minslicelength: int = 2,
     numchans: int = -1,
@@ -62,11 +62,11 @@ def noveltyslice(
             str(fftsettings[1]),
             str(fftsize),
             str(fftsize),
-            "-minslicelength",
-            str(minslicelength),
             "-filtersize",
             str(filtersize),
             str(filtersize),
+            "-minslicelength",
+            str(minslicelength),
             "-numchans",
             str(numchans),
             "-numframes",
@@ -274,7 +274,7 @@ def ampgate(
 def onsetslice(
     source: Union[str, FluidSingleOutput],
     indices: str = "",
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     filtersize: int = 5,
     framedelta: int = 0,
     metric: int = 0,
@@ -337,7 +337,7 @@ def sines(
     birthhighthreshold: float = -60.0,
     birthlowthreshold: float = -24,
     detectionthreshold: float = -96,
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     mintracklen: int = 15,
     trackfreqrange: float = 50.0,
     trackingmethod: int = 0,
@@ -470,11 +470,11 @@ def hpss(
     harmonic: str = "",
     percussive: str = "",
     residual: str = "",
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     harmfiltersize: int = 17,
     percfiltersize: int = 31,
-    harmthresh: List[float] = [0.0, 1.0, 1.0, 1.0],
-    percthresh: List[float] = [0.0, 1.0, 1.0, 1.0],
+    harmthresh: list[float] = [0.0, 1.0, 1.0, 1.0],
+    percthresh: list[float] = [0.0, 1.0, 1.0, 1.0],
     maskingmode: int = 0,
     numchans: int = -1,
     numframes: int = -1,
@@ -551,7 +551,7 @@ def nmf(
     actmode: int = 0,
     basesmode: int = 0,
     components: int = 0,
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     iterations: int = 100,
     numchans: int = -1,
     numframes: int = -1,
@@ -611,7 +611,7 @@ def nmf(
 def mfcc(
     source: Union[str, FluidSingleOutput],
     features: str = "",
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     maxfreq: float = 20000.0,
     minfreq: float = 20.0,
     numbands: int = 40,
@@ -715,7 +715,7 @@ def pitch(
     source: Union[str, FluidSingleOutput],
     features: str = "",
     algorithm: int = 2,
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     maxfreq: float = 10000.0,
     minfreq: float = 20.0,
     unit: int = 0,
@@ -769,7 +769,7 @@ def pitch(
 def melbands(
     source: Union[str, FluidSingleOutput],
     features: str = "",
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     maxfreq: float = 10000.0,
     minfreq: float = 20.0,
     normalize: int = 1,
@@ -825,7 +825,7 @@ def melbands(
 def spectralshape(
     source: Union[str, FluidSingleOutput],
     features: str = "",
-    fftsettings: List[int] = [1024, -1, -1],
+    fftsettings: list[int, int, int] = [1024, -1, -1],
     numchans: int = -1,
     numframes: int = -1,
     startchan: int = 0,
@@ -967,4 +967,109 @@ def ampfeature(
     handle_ret(ret)
     return FluidSingleOutput(features)
 
+def noveltyfeature(
+    source: Union[str, FluidSingleOutput],
+    features: str = "",
+    padding: int = 0,
+    algorithm: int = 0,
+    kernelsize: int = 3,
+    filtersize: int = 1,
+    fftsettings: list[int, int, int] = [1024, -1, -1],
+    numchans: int = -1,
+    numframes: int = -1,
+    startchan: int = 0,
+    startframe: int = 0,
+) -> FluidSingleOutput:
+    check_source_exists(source)
 
+    features = features or make_temp()
+
+    ret = subprocess.call(
+        [
+            "fluid-noveltyfeature",
+            "-source",
+            str(source),
+            "-features",
+            str(features),
+            "-algorithm",
+            str(algorithm),
+            "-kernelsize",
+            str(kernelsize),
+            str(kernelsize),
+            "-fftsettings",
+            str(fftsettings[0]),
+            str(fftsettings[1]),
+            str(fftsettings[2]),
+            str(fftsettings[2]),
+            "-padding",
+            str(padding),
+            "-filtersize",
+            str(filtersize),
+            str(filtersize),
+            "-numchans",
+            str(numchans),
+            "-numframes",
+            str(numframes),
+            "-startchan",
+            str(startchan),
+            "-startframe",
+            str(startframe),
+        ]
+    )
+
+    handle_ret(ret)
+    return FluidSingleOutput(features)
+
+def onsetslice(
+    source: Union[str, FluidSingleOutput],
+    features: str = "",
+    fftsettings: list[int, int, int] = [1024, -1, -1],
+    filtersize: int = 5,
+    framedelta: int = 0,
+    metric: int = 0,
+    padding: int = 0,
+    numchans: int = -1,
+    numframes: int = -1,
+    startchan: int = 0,
+    startframe: int = 0,
+) -> FluidSingleOutput:
+    check_source_exists(source)
+
+    features = features or make_temp()
+
+    fftsettings = fft_sanitise(fftsettings)
+    fftsize = fft_format(fftsettings)
+
+    ret = subprocess.call(
+        [
+            "fluid-onsetfeature",
+            "-source",
+            str(source),
+            "-features",
+            str(features),
+            "-fftsettings",
+            str(fftsettings[0]),
+            str(fftsettings[1]),
+            str(fftsize),
+            str(fftsize),
+            "-filtersize",
+            str(filtersize),
+            "-framedelta",
+            str(framedelta),
+            "-metric",
+            str(metric),
+            "-padding",
+            str(padding),
+            "-numchans",
+            str(numchans),
+            "-numframes",
+            str(numframes),
+            "-startchan",
+            str(startchan),
+            "-startframe",
+            str(startframe),
+        ]
+    )
+
+    handle_ret(ret)
+    return FluidSingleOutput(features)
