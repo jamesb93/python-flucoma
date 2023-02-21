@@ -1,16 +1,16 @@
-import os
 import subprocess
 import shutil
 from typing import List, Union
-from .utils import (
+from flucoma.utils import (
     fft_format,
     make_temp,
     handle_ret,
     fft_sanitise,
     check_compatible_version,
+    check_source_exists,
 )
-from .exceptions import BinError
-from .core import (
+from flucoma.exceptions import BinError
+from flucoma.core import (
     FluidSingleOutput,
     HPSSOutput,
     NMFOutput,
@@ -24,7 +24,6 @@ if not shutil.which("fluid-noveltyslice"):
 check_compatible_version(105)
 
 
-# Slicing
 def noveltyslice(
     source: Union[str, FluidSingleOutput],
     indices: str = "",
@@ -39,10 +38,7 @@ def noveltyslice(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
     indices = indices or make_temp()
 
     fftsettings = fft_sanitise(fftsettings)
@@ -83,8 +79,6 @@ def noveltyslice(
     )
 
     handle_ret(ret)
-
-    assert os.path.exists(indices)
     return FluidSingleOutput(indices)
 
 
@@ -105,10 +99,7 @@ def transientslice(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     indices = indices or make_temp()
 
@@ -149,7 +140,6 @@ def transientslice(
     )
 
     handle_ret(ret)
-    assert os.path.exists(indices)
     return FluidSingleOutput(indices)
 
 
@@ -170,10 +160,7 @@ def ampslice(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     indices = indices or make_temp()
 
@@ -214,7 +201,6 @@ def ampslice(
     )
 
     handle_ret(ret)
-    assert os.path.exists(indices)
     return FluidSingleOutput(indices)
 
 
@@ -237,10 +223,7 @@ def ampgate(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     indices = indices or make_temp()
 
@@ -285,7 +268,6 @@ def ampgate(
     )
 
     handle_ret(ret)
-    assert os.path.exists(indices)
     return FluidSingleOutput(indices)
 
 
@@ -303,10 +285,7 @@ def onsetslice(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     indices = indices or make_temp()
 
@@ -347,7 +326,6 @@ def onsetslice(
     )
 
     handle_ret(ret)
-    assert os.path.exists(indices)
     return FluidSingleOutput(indices)
 
 
@@ -370,10 +348,7 @@ def sines(
     startchan: int = 0,
     startframe: int = 0,
 ) -> SinesOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     sines = sines or make_temp()
     residual = residual or make_temp()
@@ -425,8 +400,6 @@ def sines(
     )
 
     handle_ret(ret)
-    assert os.path.exists(sines)
-    assert os.path.exists(residual)
     return SinesOutput(sines, residual)
 
 
@@ -447,10 +420,7 @@ def transients(
     startchan: int = 0,
     startframe: int = 0,
 ) -> TransientsOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     transients = transients or make_temp()
     residual = residual or make_temp()
@@ -492,8 +462,6 @@ def transients(
     )
 
     handle_ret(ret)
-    assert os.path.exists(transients)
-    assert os.path.exists(residual)
     return TransientsOutput(transients, residual)
 
 
@@ -513,10 +481,7 @@ def hpss(
     startchan: int = 0,
     startframe: int = 0,
 ) -> HPSSOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     harmonic = harmonic or make_temp()
     percussive = percussive or make_temp()
@@ -571,11 +536,6 @@ def hpss(
     )
 
     handle_ret(ret)
-    assert os.path.exists(harmonic)
-    assert os.path.exists(percussive)
-    if maskingmode != 0:
-        assert os.path.exists(residual)
-
     if maskingmode == 0:
         return HPSSOutput(harmonic, percussive)
     else:
@@ -598,10 +558,7 @@ def nmf(
     startchan: int = 0,
     startframe: int = 0,
 ) -> NMFOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     resynth = resynth or make_temp()
     activations = activations or make_temp()
@@ -647,9 +604,6 @@ def nmf(
     )
 
     handle_ret(ret)
-    assert os.path.exists(resynth)
-    assert os.path.exists(activations)
-    assert os.path.exists(bases)
     return NMFOutput(resynth, bases, activations)
 
 
@@ -667,10 +621,7 @@ def mfcc(
     startchan: int = 0,
     startframe: int = 0,
 ) -> str:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     features = features or make_temp()
 
@@ -711,7 +662,6 @@ def mfcc(
     )
 
     handle_ret(ret)
-    assert os.path.exists(features)
     return FluidSingleOutput(features)
 
 
@@ -727,10 +677,7 @@ def loudness(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     features = features or make_temp()
 
@@ -761,7 +708,6 @@ def loudness(
     )
 
     handle_ret(ret)
-    assert os.path.exists(features)
     return FluidSingleOutput(features)
 
 
@@ -778,10 +724,7 @@ def pitch(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     features = features or make_temp()
 
@@ -820,7 +763,6 @@ def pitch(
     )
 
     handle_ret(ret)
-    assert os.path.exists(features)
     return FluidSingleOutput(features)
 
 
@@ -837,10 +779,7 @@ def melbands(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     features = features or make_temp()
 
@@ -880,7 +819,6 @@ def melbands(
     )
 
     handle_ret(ret)
-    assert os.path.exists(features)
     return FluidSingleOutput(features)
 
 
@@ -893,10 +831,7 @@ def spectralshape(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     features = features or make_temp()
     fftsettings = fft_sanitise(fftsettings)
@@ -926,7 +861,6 @@ def spectralshape(
     )
 
     handle_ret(ret)
-    assert os.path.exists(features)
     return FluidSingleOutput(features)
 
 
@@ -942,10 +876,7 @@ def stats(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    if isinstance(source, FluidSingleOutput):
-        source = source.file_path
-
-    assert os.path.exists(source)
+    check_source_exists(source)
 
     stats = stats or make_temp()
 
@@ -976,5 +907,64 @@ def stats(
     )
 
     handle_ret(ret)
-    assert os.path.exists(stats)
     return FluidSingleOutput(stats)
+
+
+def function_to_cli_string(args):
+    for key, value in args.items():
+        print(key, value)
+    return
+
+
+def ampfeature(
+    source: Union[str, FluidSingleOutput],
+    features: str = "",
+    fastrampup: int = 1,
+    fastrampdown: int = 1,
+    slowrampup: int = 100,
+    slowrampdown: int = 100,
+    floor: float = -60,
+    highpassfreq: float = 85,
+    numchans: int = -1,
+    numframes: int = -1,
+    startchan: int = 0,
+    startframe: int = 0,
+) -> FluidSingleOutput:
+    check_source_exists(source)
+
+    features = features or make_temp()
+
+    ret = subprocess.call(
+        [
+            "fluid-ampfeature",
+            "-source",
+            str(source),
+            "-features",
+            str(features),
+            "-fastrampup",
+            str(fastrampup),
+            "-fastrampdown",
+            str(fastrampdown),
+            "-slowrampup",
+            str(slowrampup),
+            "-slowrampdown",
+            str(slowrampdown),
+            "-floor",
+            str(floor),
+            "-highpassfreq",
+            str(highpassfreq),
+            "-numchans",
+            str(numchans),
+            "-numframes",
+            str(numframes),
+            "-startchan",
+            str(startchan),
+            "-startframe",
+            str(startframe),
+        ]
+    )
+
+    handle_ret(ret)
+    return FluidSingleOutput(features)
+
+
