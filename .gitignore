@@ -9,3 +9,4 @@ build
 examples/resynth.wav
 examples/activations.wav
 examples/bases.wav
+.venv
