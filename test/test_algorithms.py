@@ -109,9 +109,7 @@ def test_mfcc():
     fftsize = 256
     hopsize = fftsize / 2
     numcoeffs = 6
-    mfcc = fluid.mfcc(
-        test_file, numcoeffs=numcoeffs, fftsettings=[fftsize, hopsize, fftsize]
-    )
+    mfcc = fluid.mfcc(test_file, numcoeffs=numcoeffs, fftsettings=[fftsize, hopsize, fftsize])
     assert len(mfcc) == numcoeffs
     for x in mfcc:
         assert len(x) == len(test_buf) / hopsize + 1
@@ -121,9 +119,7 @@ def test_melbands():
     fftsize = 256
     hopsize = fftsize / 2
     numbands = 6
-    output = fluid.melbands(
-        test_file, numbands=numbands, fftsettings=[fftsize, hopsize, fftsize]
-    )
+    output = fluid.melbands(test_file, numbands=numbands, fftsettings=[fftsize, hopsize, fftsize])
     melbands = get_buffer(output)
     assert len(melbands) == numbands
     for x in melbands:

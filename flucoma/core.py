@@ -46,18 +46,10 @@ class HPSSOutput(FluidMultiOutput):
     residual_path: str = ""
 
     def __post_init__(self):
-        self.harmonic = (
-            FluidSingleOutput(self.harmonic_path) if self.harmonic_path else None
-        )
-        self.percussive = (
-            FluidSingleOutput(self.percussive_path) if self.percussive_path else None
-        )
-        self.residual = (
-            FluidSingleOutput(self.residual_path) if self.residual_path else None
-        )
-        self.outputs = [
-            out for out in [self.harmonic, self.percussive, self.residual] if out
-        ]
+        self.harmonic = FluidSingleOutput(self.harmonic_path) if self.harmonic_path else None
+        self.percussive = FluidSingleOutput(self.percussive_path) if self.percussive_path else None
+        self.residual = FluidSingleOutput(self.residual_path) if self.residual_path else None
+        self.outputs = [out for out in [self.harmonic, self.percussive, self.residual] if out]
 
 
 @dataclass
@@ -67,16 +59,12 @@ class NMFOutput(FluidMultiOutput):
     activations_path: str = ""
 
     def __post_init__(self):
-        self.resynth = (
-            FluidSingleOutput(self.resynth_path) if self.resynth_path else None
-        )
+        self.resynth = FluidSingleOutput(self.resynth_path) if self.resynth_path else None
         self.bases = FluidSingleOutput(self.bases_path) if self.bases_path else None
         self.activations = (
             FluidSingleOutput(self.activations_path) if self.activations_path else None
         )
-        self.outputs = [
-            out for out in [self.resynth, self.bases, self.activations] if out
-        ]
+        self.outputs = [out for out in [self.resynth, self.bases, self.activations] if out]
 
 
 @dataclass
@@ -86,9 +74,7 @@ class SinesOutput(FluidMultiOutput):
 
     def __post_init__(self):
         self.sines = FluidSingleOutput(self.sines_path) if self.sines_path else None
-        self.residual = (
-            FluidSingleOutput(self.residual_path) if self.residual_path else None
-        )
+        self.residual = FluidSingleOutput(self.residual_path) if self.residual_path else None
         self.outputs = [out for out in [self.sines, self.residual] if out]
 
 
@@ -98,10 +84,6 @@ class TransientsOutput(FluidMultiOutput):
     residual_path: str = ""
 
     def __post_init__(self):
-        self.transients = (
-            FluidSingleOutput(self.transients_path) if self.transients_path else None
-        )
-        self.residual = (
-            FluidSingleOutput(self.residual_path) if self.residual_path else None
-        )
+        self.transients = FluidSingleOutput(self.transients_path) if self.transients_path else None
+        self.residual = FluidSingleOutput(self.residual_path) if self.residual_path else None
         self.outputs = [out for out in [self.transients, self.residual] if out]
