@@ -7,6 +7,49 @@ from uuid import uuid4
 from pathlib import Path
 
 
+def compute_cli_call(executable_name: str, args: dict):
+    output_params = [
+        'destination', 
+        'features', 
+        'indices', 
+        'sines', 
+        'residual',
+        'transients',
+        'harmonic',
+        'percussive',
+        'resynth',
+        'activations',
+        'bases',
+        'stats'
+    ]
+    cli_string = [f'fluid-{executable_name}']
+    output = None
+
+    for param, value in args.items():
+        cli_string.append(f'-{param}')
+        if param == 'source':
+            check_source_exists(value)
+            cli_string.append(str(value))
+        elif param == 'fftsettings':
+            fftsettings = flucoma.utils.fft_sanitise(value)
+            fftsize = flucoma.utils.fft_format(value)
+            cli_string.append(str(fftsettings[0]))
+            cli_string.append(str(fftsettings[1]))
+            cli_string.append(str(fftsize))
+            cli_string.append(str(fftsize))
+        elif param in output_params:
+            if value == '':
+                output = make_temp()
+            else:
+                output = str(value)
+            cli_string.append(output)
+        else:
+            cli_string.append(str(value))
+
+    return cli_string, output
+
+
+
 def check_compatible_version(minimum_version):
     # Check version of CLI tools is compatible
     flucoma_cli_version = subprocess.run(

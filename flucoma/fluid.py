@@ -1,6 +1,5 @@
 import subprocess
 import shutil
-from typing import Union
 from flucoma.utils import (
     fft_format,
     make_temp,
@@ -8,6 +7,7 @@ from flucoma.utils import (
     fft_sanitise,
     check_compatible_version,
     check_source_exists,
+    compute_cli_call
 )
 from flucoma.exceptions import BinError
 from flucoma.core import (
@@ -25,7 +25,7 @@ check_compatible_version(105)
 
 
 def noveltyslice(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     indices: str = "",
     algorithm: int = 0,
     threshold: float = 0.5,
@@ -83,7 +83,7 @@ def noveltyslice(
 
 
 def transientslice(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     indices: str = "",
     blocksize: int = 256,
     clumplength: int = 25,
@@ -144,7 +144,7 @@ def transientslice(
 
 
 def ampslice(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     indices: str = "",
     fastrampdown: int = 1,
     fastrampup: int = 1,
@@ -205,7 +205,7 @@ def ampslice(
 
 
 def ampgate(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     indices: str = "",
     rampup: int = 10,
     rampdown: int = 10,
@@ -272,7 +272,7 @@ def ampgate(
 
 
 def onsetslice(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     indices: str = "",
     fftsettings: list[int, int, int] = [1024, -1, -1],
     filtersize: int = 5,
@@ -285,52 +285,15 @@ def onsetslice(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    check_source_exists(source)
 
-    indices = indices or make_temp()
-
-    fftsettings = fft_sanitise(fftsettings)
-    fftsize = fft_format(fftsettings)
-
-    ret = subprocess.call(
-        [
-            "fluid-onsetslice",
-            "-source",
-            str(source),
-            "-indices",
-            str(indices),
-            "-fftsettings",
-            str(fftsettings[0]),
-            str(fftsettings[1]),
-            str(fftsize),
-            str(fftsize),
-            "-filtersize",
-            str(filtersize),
-            "-framedelta",
-            str(framedelta),
-            "-metric",
-            str(metric),
-            "-minslicelength",
-            str(minslicelength),
-            "-threshold",
-            str(threshold),
-            "-numchans",
-            str(numchans),
-            "-numframes",
-            str(numframes),
-            "-startchan",
-            str(startchan),
-            "-startframe",
-            str(startframe),
-        ]
-    )
-
+    cli, output = compute_cli_call('onsetslice', locals())
+    ret = subprocess.call(cli)
     handle_ret(ret)
-    return FluidSingleOutput(indices)
+    return FluidSingleOutput(output)
 
 
 def sines(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     sines: str = "",
     residual: str = "",
     bandwidth: int = 76,
@@ -404,7 +367,7 @@ def sines(
 
 
 def transients(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     transients: str = "",
     residual: str = "",
     blocksize: int = 256,
@@ -466,7 +429,7 @@ def transients(
 
 
 def hpss(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     harmonic: str = "",
     percussive: str = "",
     residual: str = "",
@@ -544,7 +507,7 @@ def hpss(
 
 # Objects
 def nmf(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     activations: str = "",
     bases: str = "",
     resynth: str = "",
@@ -609,7 +572,7 @@ def nmf(
 
 # Descriptors
 def mfcc(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     features: str = "",
     fftsettings: list[int, int, int] = [1024, -1, -1],
     maxfreq: float = 20000.0,
@@ -620,7 +583,7 @@ def mfcc(
     numframes: int = -1,
     startchan: int = 0,
     startframe: int = 0,
-) -> str:
+) -> FluidSingleOutput:
     check_source_exists(source)
 
     features = features or make_temp()
@@ -666,7 +629,7 @@ def mfcc(
 
 
 def loudness(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     features: str = "",
     hopsize: int = 512,
     windowsize: int = 1024,
@@ -712,7 +675,7 @@ def loudness(
 
 
 def pitch(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     features: str = "",
     algorithm: int = 2,
     fftsettings: list[int, int, int] = [1024, -1, -1],
@@ -767,7 +730,7 @@ def pitch(
 
 
 def melbands(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     features: str = "",
     fftsettings: list[int, int, int] = [1024, -1, -1],
     maxfreq: float = 10000.0,
@@ -823,7 +786,7 @@ def melbands(
 
 
 def spectralshape(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     features: str = "",
     fftsettings: list[int, int, int] = [1024, -1, -1],
     numchans: int = -1,
@@ -865,7 +828,7 @@ def spectralshape(
 
 
 def stats(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     stats: str = "",
     high: float = 100.0,
     low: float = 0.0,
@@ -917,7 +880,7 @@ def function_to_cli_string(args):
 
 
 def ampfeature(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     features: str = "",
     fastrampup: int = 1,
     fastrampdown: int = 1,
@@ -967,8 +930,9 @@ def ampfeature(
     handle_ret(ret)
     return FluidSingleOutput(features)
 
+
 def noveltyfeature(
-    source: Union[str, FluidSingleOutput],
+    source: str | FluidSingleOutput,
     features: str = "",
     padding: int = 0,
     algorithm: int = 0,
@@ -1020,8 +984,9 @@ def noveltyfeature(
     handle_ret(ret)
     return FluidSingleOutput(features)
 
-def onsetslice(
-    source: Union[str, FluidSingleOutput],
+
+def onsetfeature(
+    source: str | FluidSingleOutput,
     features: str = "",
     fftsettings: list[int, int, int] = [1024, -1, -1],
     filtersize: int = 5,
@@ -1073,3 +1038,26 @@ def onsetslice(
 
     handle_ret(ret)
     return FluidSingleOutput(features)
+
+def audiotransport(
+    sourcea: str | FluidSingleOutput,
+    sourceb: str | FluidSingleOutput,
+    numchansa: int = -1,
+    numframesa: int = -1,
+    startchana: int = 0,
+    startframea: int = 0,
+    numchansb: int = -1,
+    numframesb: int = -1,
+    startchanb: int = 0,
+    startframeb: int = 0,
+    destination: str = "",
+    interpolation: float = 0.5,
+    fftsettings: list[int, int, int] = [1024, -1, -1],
+) -> FluidSingleOutput:
+
+    cli, output = compute_cli_call('audiotransport', locals())
+
+    ret = subprocess.call(cli)
+    handle_ret(ret)
+
+    return FluidSingleOutput(output)
