@@ -7,6 +7,11 @@ from uuid import uuid4
 from pathlib import Path
 
 
+def exec_cli_call(cli_args: list[str]):
+    ret = subprocess.call(cli_args)
+    flucoma.utils.handle_ret(ret)
+
+
 def compute_cli_call(executable_name: str, args: dict):
     output_params = [
         'destination', 
