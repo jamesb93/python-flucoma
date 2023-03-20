@@ -23,7 +23,9 @@ stats = fluid.stats(mfcc, numderivs=0)
 for i, band in enumerate(stats):
     printout = f"Stats for MFCC band number {i}: {band} \n"
     print(printout)
-print("You should see 10 values for each band's statistics, because we have 5 coefficients and the input is stereo!")
+print(
+    "You should see 10 values for each band's statistics, because we have 5 coefficients and the input is stereo!"
+)
 
 
 # We didn't set any specific output so we can cleanup the temporary file if we want

@@ -1,14 +1,12 @@
 import subprocess
 import shutil
 from flucoma.utils import (
-    fft_format,
     make_temp,
     handle_ret,
-    fft_sanitise,
     check_compatible_version,
     check_source_exists,
     compute_cli_call,
-    exec_cli_call
+    exec_cli_call,
 )
 from flucoma.exceptions import BinError
 from flucoma.core import (
@@ -39,7 +37,7 @@ def noveltyslice(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('noveltyslice', locals())
+    cli, output = compute_cli_call("noveltyslice", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -247,8 +245,7 @@ def onsetslice(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-
-    cli, output = compute_cli_call('onsetslice', locals())
+    cli, output = compute_cli_call("onsetslice", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -272,7 +269,7 @@ def sines(
     startchan: int = 0,
     startframe: int = 0,
 ) -> SinesOutput:
-    cli, output = compute_cli_call('sines', locals())
+    cli, output = compute_cli_call("sines", locals())
     exec_cli_call(cli)
     return SinesOutput(output[0], output[1])
 
@@ -294,8 +291,7 @@ def transients(
     startchan: int = 0,
     startframe: int = 0,
 ) -> TransientsOutput:
-    
-    cli, output = compute_cli_call('transients', locals())
+    cli, output = compute_cli_call("transients", locals())
     exec_cli_call(cli)
     return TransientsOutput(output[0], output[1])
 
@@ -316,7 +312,7 @@ def hpss(
     startchan: int = 0,
     startframe: int = 0,
 ) -> HPSSOutput:
-    cli, output = compute_cli_call('hpss', locals())
+    cli, output = compute_cli_call("hpss", locals())
     exec_cli_call(cli)
     if maskingmode == 0:
         return HPSSOutput(output[0], output[1])
@@ -341,7 +337,7 @@ def nmf(
     startchan: int = 0,
     startframe: int = 0,
 ) -> NMFOutput:
-    cli, output = compute_cli_call('nmf', locals())
+    cli, output = compute_cli_call("nmf", locals())
     exec_cli_call(cli)
     return NMFOutput(output[0], output[1], output[2])
 
@@ -360,7 +356,7 @@ def mfcc(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('mfcc', locals())
+    cli, output = compute_cli_call("mfcc", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -377,7 +373,7 @@ def loudness(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('loudness', locals())
+    cli, output = compute_cli_call("loudness", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -395,7 +391,7 @@ def pitch(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('pitch', locals())
+    cli, output = compute_cli_call("pitch", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -413,7 +409,7 @@ def melbands(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('melbands', locals())
+    cli, output = compute_cli_call("melbands", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -427,7 +423,7 @@ def spectralshape(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('spectralshape', locals())
+    cli, output = compute_cli_call("spectralshape", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -444,7 +440,7 @@ def stats(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('stats', locals())
+    cli, output = compute_cli_call("stats", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -463,7 +459,7 @@ def ampfeature(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('ampfeature', locals())
+    cli, output = compute_cli_call("ampfeature", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -481,7 +477,7 @@ def noveltyfeature(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('noveltyfeature', locals())
+    cli, output = compute_cli_call("noveltyfeature", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -499,7 +495,7 @@ def onsetfeature(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('onsetfeature', locals())
+    cli, output = compute_cli_call("onsetfeature", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -519,7 +515,7 @@ def audiotransport(
     interpolation: float = 0.5,
     fftsettings: list[int, int, int] = [1024, -1, -1],
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('audiotransport', locals())
+    cli, output = compute_cli_call("audiotransport", locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
@@ -532,9 +528,9 @@ def nmfcross(
     polyphony: int = 11,
     continuity: int = 7,
     iterations: int = 100,
-    fftsettings: list[int, int, int] = [1024, -1, -1]
+    fftsettings: list[int, int, int] = [1024, -1, -1],
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('nmfcross', locals())
+    cli, output = compute_cli_call("nmfcross", locals())
     print(cli)
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])

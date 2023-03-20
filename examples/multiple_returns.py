@@ -1,6 +1,5 @@
 from pathlib import Path
 from flucoma import fluid
-from flucoma.fluid import HPSSOutput
 
 source = Path("Nicol-LoopE-M.wav")
 
@@ -20,7 +19,9 @@ for x in hpss:
     # So its worth checking that in this case the residual was made
     # If it wasn't it would be a blank string so we just don't process these
     print(x)
-    if x != '':
-        sines = fluid.sines(x) #The path printed here can be passed to something else for processing
+    if x != "":
+        sines = fluid.sines(
+            x
+        )  # The path printed here can be passed to something else for processing
     print(sines.sines)
     print(sines.residual)

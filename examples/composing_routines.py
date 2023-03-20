@@ -6,6 +6,7 @@ source = Path("Nicol-LoopE-M.wav")
 
 # Because the returns of fluid.processes() are generic we can compose them into custom classes
 
+
 class SpectralStats:
     def __init__(self):
         self.mfcc: str = ""

@@ -171,8 +171,9 @@ def test_ampfeature():
 
 def test_audiotransport():
     output = fluid.audiotransport(sourcea=test_audio, sourceb=test_audio)
-    assert(len(output) == 453932)
+    assert len(output) == 453932
+
 
 def test_nmfcross():
     output = fluid.nmfcross(source=test_audio, target=test_audio, iterations=1)
-    assert(len(output) == 453932)
+    assert len(output) == 453932

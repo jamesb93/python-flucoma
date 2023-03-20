@@ -14,52 +14,52 @@ def exec_cli_call(cli_args: list[str]):
 
 def compute_cli_call(executable_name: str, args: dict):
     output_params = [
-        'destination', 
-        'features', 
-        'indices', 
-        'sines', 
-        'residual',
-        'transients',
-        'harmonic',
-        'percussive',
-        'resynth',
-        'activations',
-        'bases',
-        'stats',
-        'output'
+        "destination",
+        "features",
+        "indices",
+        "sines",
+        "residual",
+        "transients",
+        "harmonic",
+        "percussive",
+        "resynth",
+        "activations",
+        "bases",
+        "stats",
+        "output",
     ]
 
     max_param = {
-        "numchroma" : { "chroma" },
-        "harmfiltersize" : { "hpss" },
-        "percfiltersize" : { "hpss" },
-        "numbands" : { "melbands", "mfcc" },
-        "numcoeffs" : { "mfcc" },
-        "kernelsize" : { "noveltyfeature", "noveltyslice" },
-        "filtersize" : { "noveltyfeature", "noveltyslice" },
-        "numpeaks" : { "sinefeature" } # for version 1.0.6
+        "numchroma": {"chroma"},
+        "harmfiltersize": {"hpss"},
+        "percfiltersize": {"hpss"},
+        "numbands": {"melbands", "mfcc"},
+        "numcoeffs": {"mfcc"},
+        "kernelsize": {"noveltyfeature", "noveltyslice"},
+        "filtersize": {"noveltyfeature", "noveltyslice"},
+        "numpeaks": {"sinefeature"},  # for version 1.0.6
     }
-    cli = [f'fluid-{executable_name}']
+    cli = [f"fluid-{executable_name}"]
     output = []
 
     for param, value in args.items():
-        cli.append(f'-{param}')
-        if param == 'source' or param == 'target':
+        cli.append(f"-{param}")
+        if param == "source" or param == "target":
             check_source_exists(value)
             cli.append(str(value))
-        elif param == 'fftsettings':
+        elif param == "fftsettings":
             fftsettings = flucoma.utils.fft_sanitise(value)
             fftsize = flucoma.utils.fft_format(value)
             cli.append(str(fftsettings[0]))
             cli.append(str(fftsettings[1]))
             cli.append(str(fftsize))
             cli.append(str(fftsize))
-        elif param == 'harmthresh' or param == 'percthresh':
+        elif param == "harmthresh" or param == "percthresh":
             for threshold in value:
                 cli.append(str(threshold))
         elif param in output_params:
             temporary_output = None
-            if value == '':
+            if value == "":
                 temporary_output = make_temp()
             else:
                 temporary_output = str(value)
