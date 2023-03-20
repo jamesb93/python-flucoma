@@ -167,3 +167,7 @@ def test_ampfeature():
     output2 = fluid.ampfeature(source=test_file)
     assert len(output1) == 453932
     assert len(output2) == 1024
+
+def test_audiotransport():
+    output = fluid.audiotransport(sourcea=test_audio, sourceb=test_audio)
+    assert(len(output) == 453932)
