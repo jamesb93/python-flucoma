@@ -503,9 +503,11 @@ def onsetfeature(
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
+
 def audiotransport(
     sourcea: str | FluidSingleOutput,
     sourceb: str | FluidSingleOutput,
+    destination: str = "",
     numchansa: int = -1,
     numframesa: int = -1,
     startchana: int = 0,
@@ -514,11 +516,25 @@ def audiotransport(
     numframesb: int = -1,
     startchanb: int = 0,
     startframeb: int = 0,
-    destination: str = "",
     interpolation: float = 0.5,
     fftsettings: list[int, int, int] = [1024, -1, -1],
 ) -> FluidSingleOutput:
-
     cli, output = compute_cli_call('audiotransport', locals())
+    exec_cli_call(cli)
+    return FluidSingleOutput(output[0])
+
+
+def nmfcross(
+    source: str | FluidSingleOutput,
+    target: str | FluidSingleOutput,
+    output: str = "",
+    timesparsity: int = 7,
+    polyphony: int = 11,
+    continuity: int = 7,
+    iterations: int = 100,
+    fftsettings: list[int, int, int] = [1024, -1, -1]
+) -> FluidSingleOutput:
+    cli, output = compute_cli_call('nmfcross', locals())
+    print(cli)
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])

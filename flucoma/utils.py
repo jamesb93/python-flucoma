@@ -25,7 +25,8 @@ def compute_cli_call(executable_name: str, args: dict):
         'resynth',
         'activations',
         'bases',
-        'stats'
+        'stats',
+        'output'
     ]
 
     max_param = {
@@ -43,7 +44,7 @@ def compute_cli_call(executable_name: str, args: dict):
 
     for param, value in args.items():
         cli.append(f'-{param}')
-        if param == 'source':
+        if param == 'source' or param == 'target':
             check_source_exists(value)
             cli.append(str(value))
         elif param == 'fftsettings':
