@@ -1,24 +1,16 @@
 from pathlib import Path
 from flucoma import fluid
-from flucoma.utils import get_buffer
+from flucoma.fluid import HPSSOutput
 
 source = Path("Nicol-LoopE-M.wav")
 
-# Run HPSS on the source and return a named tuple.
-# The named tuple will contain an element (a path to a binary file) for each of the components it produces
-hpss = fluid.hpss(source) # return just the tuple
-harm, perc = fluid.hpss(source) # return enumerated elements of the tuple
+# Run HPSS on the source and return a custom DataClass
+hpss = fluid.hpss(source)
 
-# You can then reference each component in several ways
-
-# By name
+# Retrieve the outputs by name
 harmonic = hpss.harmonic
 percussive = hpss.percussive
 residual = hpss.residual
-
-# By index
-harmonic = hpss[0]
-percussive = hpss[1]
 
 # This allows you to work programatically on the outputs
 

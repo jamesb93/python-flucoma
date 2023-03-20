@@ -1,32 +1,30 @@
 from pathlib import Path
 from flucoma import fluid
-from flucoma.utils import get_buffer, cleanup
+from flucoma.utils import cleanup
 
-
-source = Path("Nicol-LoopE-M.wav")
+# You will need to replace the path here with your own sound file
+source = Path("stereo_test.wav")
 
 # Take the MFCCs of the source
-mfcc = fluid.mfcc(source, numcoeffs=19, numbands=80, fftsettings=[4096, 512, 4096])
+mfcc = fluid.mfcc(source, numcoeffs=5, numbands=20)
 
-# fluid.processes() return the paths of the result which is a binary file
+# fluid.processes return a python dataclass that contains two things:
+# 1. The file_path which is a string pointing to the file which exists on disk.
+# 2. The data stored in that file.
 # If you do not pass a specific path for an output it will put the output in a temporary file
-# The default temporary location is ~/.python-flucoma
+# The default location for all output files is temporary location is ~/.python-flucoma
 
-# We then use get_buffer() to convert this file from disk to a python type (list or numpy array)
-# No need to store the output of fluid.stats if it is a 'one shot' process. We can pass directly to get_buffer()
+# From the dataclass we can extract
 
 # Wrap a fluid.process() in a get_buffer to get a fairly native output
-stats = get_buffer(fluid.stats(mfcc, numderivs=1))
+stats = fluid.stats(mfcc, numderivs=0)
 
 # Let's see the data
 for i, band in enumerate(stats):
-    printout = f"Stats for {i+1} MFCC band: {band} \n"
+    printout = f"Stats for MFCC band number {i}: {band} \n"
     print(printout)
+print("You should see 10 values for each band's statistics, because we have 5 coefficients and the input is stereo!")
+
 
 # We didn't set any specific output so we can cleanup the temporary file if we want
-cleanup() 
-# you might import all of the package to make the call clearer
-
-# import flucoma
-# flucoma.utils.cleanup()
-
+cleanup()
