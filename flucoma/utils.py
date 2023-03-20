@@ -27,32 +27,52 @@ def compute_cli_call(executable_name: str, args: dict):
         'bases',
         'stats'
     ]
-    cli_string = [f'fluid-{executable_name}']
-    output = None
+
+    max_param = {
+        "numchroma" : { "chroma" },
+        "harmfiltersize" : { "hpss" },
+        "percfiltersize" : { "hpss" },
+        "numbands" : { "melbands", "mfcc" },
+        "numcoeffs" : { "mfcc" },
+        "kernelsize" : { "noveltyfeature", "noveltyslice" },
+        "filtersize" : { "noveltyfeature", "noveltyslice" },
+        "numpeaks" : { "sinefeature" } # for version 1.0.6
+    }
+    cli = [f'fluid-{executable_name}']
+    output = []
 
     for param, value in args.items():
-        cli_string.append(f'-{param}')
+        cli.append(f'-{param}')
         if param == 'source':
             check_source_exists(value)
-            cli_string.append(str(value))
+            cli.append(str(value))
         elif param == 'fftsettings':
             fftsettings = flucoma.utils.fft_sanitise(value)
             fftsize = flucoma.utils.fft_format(value)
-            cli_string.append(str(fftsettings[0]))
-            cli_string.append(str(fftsettings[1]))
-            cli_string.append(str(fftsize))
-            cli_string.append(str(fftsize))
+            cli.append(str(fftsettings[0]))
+            cli.append(str(fftsettings[1]))
+            cli.append(str(fftsize))
+            cli.append(str(fftsize))
+        elif param == 'harmthresh' or param == 'percthresh':
+            for threshold in value:
+                cli.append(str(threshold))
         elif param in output_params:
+            temporary_output = None
             if value == '':
-                output = make_temp()
+                temporary_output = make_temp()
             else:
-                output = str(value)
-            cli_string.append(output)
+                temporary_output = str(value)
+            cli.append(temporary_output)
+            output.append(temporary_output)
         else:
-            cli_string.append(str(value))
+            cli.append(str(value))
 
-    return cli_string, output
-
+            # append the same value value again if its a max param
+            # e.g -filtersize 3 3
+            if param in max_param:
+                if executable_name in max_param[param]:
+                    cli.append(str(value))
+    return cli, output
 
 
 def check_compatible_version(minimum_version):
