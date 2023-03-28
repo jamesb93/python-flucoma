@@ -1,10 +1,6 @@
-import subprocess
 import shutil
 from flucoma.utils import (
-    make_temp,
-    handle_ret,
     check_compatible_version,
-    check_source_exists,
     compute_cli_call,
     exec_cli_call
 )
@@ -104,7 +100,7 @@ def ampgate(
     startchan: int = 0,
     startframe: int = 0,
 ) -> FluidSingleOutput:
-    cli, output = compute_cli_call('ampslice', locals())
+    cli, output = compute_cli_call('ampgate', locals())
     exec_cli_call(cli)
     return FluidSingleOutput(output[0])
 
