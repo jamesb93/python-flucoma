@@ -1,5 +1,5 @@
 from flucoma import fluid
-from pathlib import Path, PosixPath
+from pathlib import Path
 from flucoma.core import FluidSingleOutput
 
 
@@ -54,10 +54,10 @@ def test_pathlib():
     for algo in all_algorithms:
         if isinstance(algo, FluidSingleOutput):
             p = Path(algo)
-            assert isinstance(p, PosixPath)
+            assert isinstance(p, Path)
             assert str(p) != ""
         else:
             for output in algo:
                 p = Path(output)
-                assert isinstance(p, PosixPath)
+                assert isinstance(p, Path)
                 assert str(p) != ""
